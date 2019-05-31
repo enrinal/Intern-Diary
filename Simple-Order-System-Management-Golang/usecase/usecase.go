@@ -10,15 +10,15 @@ type User struct {
 	IsSeller       bool
 	CountPembelian int
 	CountItem      int
-	Status         int
+	Status         string
 	Customer       domain.Customer
 }
 type Order domain.Order
 
 func IsPembelian(pembeli User) bool {
-	if pembeli.Status == 1 && pembeli.CountPembelian <= 5 && pembeli.CountItem <= 10 {
+	if pembeli.Status == "regular_buyers" && pembeli.CountPembelian <= 5 && pembeli.CountItem <= 10 {
 		return true
-	} else if pembeli.Status == 2 && pembeli.CountItem <= 10 {
+	} else if pembeli.Status == "subscription buyer" && pembeli.CountItem <= 10 {
 		return true
 	} else {
 		return false
@@ -45,7 +45,7 @@ func (pembeli *User) AmbilBarang(item domain.Item) bool {
 }
 
 func PrintUser(pembeli User) {
-	fmt.Printf("%d %s %d %d %d \n", pembeli.Id, pembeli.Customer.Name, pembeli.CountItem, pembeli.CountPembelian, pembeli.Status)
+	fmt.Printf("%d %s %d %d %s \n", pembeli.Id, pembeli.Customer.Name, pembeli.CountItem, pembeli.CountPembelian, pembeli.Status)
 }
 
 func (order *Order) ProsesOrder() bool {
