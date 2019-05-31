@@ -10,7 +10,7 @@ func main() {
 	user := usecase.User{1, false, 1, 1, 1, cust}
 	sapi := domain.Item{1, "Sapi", true}
 	mobil := domain.Item{2, "Mobil", true}
-	order := usecase.Order{1, user.Customer, []domain.Item{sapi, mobil}, 1}
+	order := usecase.Order{1, user.Customer, []domain.Item{sapi, mobil}, "pending"}
 	user.AmbilBarang(sapi)
 	usecase.PrintUser(user)
 	order.ProsesOrder()

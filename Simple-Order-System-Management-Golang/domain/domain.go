@@ -12,11 +12,10 @@ type Item struct {
 }
 
 type Order struct {
-	//Status 1:Tertunda 2:Diproses 3:Dikirim 4:Diterima
 	Id       int
 	Customer Customer
 	Items    []Item
-	Status   int
+	Status   string
 }
 
 // func (order *Order) Add(item Item) error {

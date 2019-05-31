@@ -49,17 +49,17 @@ func PrintUser(pembeli User) {
 }
 
 func (order *Order) ProsesOrder() bool {
-	order.Status = 2
+	order.Status = "process"
 	return true
 }
 
 func (order *Order) DikirimOrder() bool {
-	order.Status = 3
+	order.Status = "sent"
 	return true
 }
 
 func (order *Order) DiterimaOrder() bool {
-	order.Status = 4
+	order.Status = "delivered"
 	return true
 }
 
