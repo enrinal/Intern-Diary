@@ -15,7 +15,7 @@ type Order struct {
 	Id       int
 	Customer Customer
 	Items    []Item
-	Status   string
+	Status   int
 }
 
 // func (order *Order) Add(item Item) error {

@@ -5,20 +5,28 @@ import (
 	"order/domain"
 )
 
+const REGULARBUYER = 1
+const SUBCRIPTIONBUYER = 2
+const PENDING = 1
+const PROCESS = 2
+const DDELIVERED = 3
+const SEND = 2
+
+
 type User struct {
 	Id             int
 	IsSeller       bool
 	CountPembelian int
 	CountItem      int
-	Status         string
+	Status         int
 	Customer       domain.Customer
 }
 type Order domain.Order
 
 func IsPembelian(pembeli User) bool {
-	if pembeli.Status == "regular_buyers" && pembeli.CountPembelian <= 5 && pembeli.CountItem <= 10 {
+	if pembeli.Status == REGULARBUYER && pembeli.CountPembelian <= 5 && pembeli.CountItem <= 10 {
 		return true
-	} else if pembeli.Status == "subscription buyer" && pembeli.CountItem <= 10 {
+	} else if pembeli.Status == SUBCRIPTIONBUYER && pembeli.CountItem <= 10 {
 		return true
 	} else {
 		return false
@@ -45,21 +53,21 @@ func (pembeli *User) AmbilBarang(item domain.Item) bool {
 }
 
 func PrintUser(pembeli User) {
-	fmt.Printf("%d %s %d %d %s \n", pembeli.Id, pembeli.Customer.Name, pembeli.CountItem, pembeli.CountPembelian, pembeli.Status)
+	fmt.Printf("%d %s %d %d %d \n", pembeli.Id, pembeli.Customer.Name, pembeli.CountItem, pembeli.CountPembelian, pembeli.Status)
 }
 
 func (order *Order) ProsesOrder() bool {
-	order.Status = "process"
+	order.Status = PROCESS
 	return true
 }
 
 func (order *Order) DikirimOrder() bool {
-	order.Status = "sent"
+	order.Status = SEND
 	return true
 }
 
 func (order *Order) DiterimaOrder() bool {
-	order.Status = "delivered"
+	order.Status = DDELIVERED
 	return true
 }
 
