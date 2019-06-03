@@ -14,60 +14,60 @@ const SEND = 2
 
 
 type User struct {
-	Id             int
-	IsSeller       bool
-	CountPembelian int
-	CountItem      int
-	Status         int
-	Customer       domain.Customer
+	Id         int
+	IsSeller   bool
+	CountOrder int
+	CountItem  int
+	Status     int
+	Customer   domain.Customer
 }
 type Order domain.Order
 
-func IsPembelian(pembeli User) bool {
-	if pembeli.Status == REGULARBUYER && pembeli.CountPembelian <= 5 && pembeli.CountItem <= 10 {
+func IsOrderAccept(buyer User) bool {
+	if buyer.Status == 1 && buyer.CountOrder <= 5 && buyer.CountItem <= 10 {
 		return true
-	} else if pembeli.Status == SUBCRIPTIONBUYER && pembeli.CountItem <= 10 {
-		return true
-	} else {
-		return false
-	}
-}
-
-func (pembeli *User) BeliBarang() bool {
-	if IsPembelian(*pembeli) == true {
-		pembeli.CountPembelian++
+	} else if buyer.Status == 2 && buyer.CountItem <= 10 {
 		return true
 	} else {
 		return false
 	}
 }
 
-func (pembeli *User) AmbilBarang(item domain.Item) bool {
-	if IsPembelian(*pembeli) == true {
-		pembeli.CountItem++
-		//domain.Order{pembeli.Id,pembeli.Customer,[]domain.Item{item}}
+func (buyer *User) Order() bool {
+	if IsOrderAccept(*buyer) == true {
+		buyer.CountOrder++
 		return true
 	} else {
 		return false
 	}
 }
 
-func PrintUser(pembeli User) {
-	fmt.Printf("%d %s %d %d %d \n", pembeli.Id, pembeli.Customer.Name, pembeli.CountItem, pembeli.CountPembelian, pembeli.Status)
+func (buyer *User) AddItem(item domain.Item) bool {
+	if IsOrderAccept(*buyer) == true {
+		buyer.CountItem++
+		//domain.Order{buyer.Id,buyer.Customer,[]domain.Item{item}}
+		return true
+	} else {
+		return false
+	}
 }
 
-func (order *Order) ProsesOrder() bool {
-	order.Status = PROCESS
+func PrintUser(buyer User) {
+	fmt.Printf("%d %s %d %d %d \n", buyer.Id, buyer.Customer.Name, buyer.CountItem, buyer.CountOrder, buyer.Status)
+}
+
+func (order *Order) OrderProcess() bool {
+	order.Status = 2
 	return true
 }
 
-func (order *Order) DikirimOrder() bool {
-	order.Status = SEND
+func (order *Order) OrderSend() bool {
+	order.Status = 3
 	return true
 }
 
-func (order *Order) DiterimaOrder() bool {
-	order.Status = DDELIVERED
+func (order *Order) OrderDelivered() bool {
+	order.Status = 4
 	return true
 }
 
