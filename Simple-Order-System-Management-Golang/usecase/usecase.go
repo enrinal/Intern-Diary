@@ -5,6 +5,14 @@ import (
 	"order/domain"
 )
 
+const REGULARBUYER = 1
+const SUBCRIPTIONBUYER = 2
+const PENDING = 1
+const PROCESS = 2
+const DDELIVERED = 3
+const SEND = 2
+
+
 type User struct {
 	Id         int
 	IsSeller   bool

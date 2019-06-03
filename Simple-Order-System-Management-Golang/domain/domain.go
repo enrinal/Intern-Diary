@@ -12,7 +12,6 @@ type Item struct {
 }
 
 type Order struct {
-	//Status 1:Tertunda 2:Diproses 3:Dikirim 4:Diterima
 	Id       int
 	Customer Customer
 	Items    []Item

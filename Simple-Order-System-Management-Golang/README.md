@@ -16,3 +16,4 @@ case
 - pembeli bisa mengubah status menjadi diterima atau otomatis terubah jika lewat 1 hari.
 
 Use TDD dan Clean Arcitecture
+;
