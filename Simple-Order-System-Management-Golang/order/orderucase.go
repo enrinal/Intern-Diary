@@ -1,6 +1,5 @@
 package order
 
-
 //PENDING const for declare statusOrder = 1
 const PENDING = 1
 
@@ -13,7 +12,7 @@ const SEND = 3
 //DELIVERED const for declare statusOrder = 4
 const DELIVERED = 4
 
-func NewOrder(ID int, Item string, Status int) *Order{
+func NewOrder(ID int, Item string, Status int) *Order {
 	order := new(Order)
 	order.ID = ID
 	order.Item = Item
@@ -21,18 +20,30 @@ func NewOrder(ID int, Item string, Status int) *Order{
 	return order
 }
 
-func (order *Order) OrderProcess()  {
-	order.Status = PROCESS
+func (order *Order) OrderProcess() string {
+	if order.Status == PENDING {
+		order.Status = PROCESS
+		return "Order Process"
+	}
+	return "Error Change Order Status to Process"
 }
 
-func (order *Order) OrderSend()  {
-	order.Status = SEND
+func (order *Order) OrderSend() string {
+	if order.Status == PROCESS {
+		order.Status = SEND
+		return "Order Send"
+	}
+	return "Error Change Order Status to Send"
 }
 
-func (order *Order) OrderDelivered()  {
-	order.Status = DELIVERED
+func (order *Order) OrderDelivered() string {
+	if order.Status == SEND {
+		order.Status = DELIVERED
+		return "Order Delivered"
+	}
+	return "Error Change Order Status to Delivered"
 }
 
-func (order Order) OrderStatus() int{
+func (order Order) OrderStatus() int {
 	return order.Status
 }
