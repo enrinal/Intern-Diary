@@ -3,21 +3,41 @@ package customer
 import "testing"
 
 func TestOrder(t *testing.T) {
-	buyer := NewCustomer(1, "Enrinal", 1, 1, 1)
-	buyer.AddOrder()
-	got := buyer.SumOrder()
-	want := 2
-	if got != want {
-		t.Errorf("got %d want %d", got, want)
+	areaTest := []struct {
+		numOrder   int
+		custStatus int
+		want       string
+	}{
+		{1, REGULARBUYER, "Order Added"},
+		{1, SUBCRIPTIONBUYER, "Order Added"},
+		{5, REGULARBUYER, "Order Added"},
+		{6, REGULARBUYER, "Order limit exceeded"},
+		{6, SUBCRIPTIONBUYER, "Order Added"},
+	}
+	for _, tt := range areaTest {
+		buyer := NewCustomer(1, "Customer", 0, 1, tt.custStatus)
+		got := buyer.AddOrder(tt.numOrder)
+		if got != tt.want {
+			t.Errorf("got %s want %s", got, tt.want)
+		}
 	}
 }
 
 func TestAddItem(t *testing.T) {
-	buyer := NewCustomer(1, "Enrinal", 1, 1, 1)
-	s := make([]string, 5)
-	got := buyer.AddItem(s)
-	want := "Item Added"
-	if got != want {
-		t.Errorf("got %s want %s", got, want)
+	areaTest := []struct {
+		numItem int
+		want    string
+	}{
+		{5, "Item Added"},
+		{10, "Item Added"},
+		{15, "Your basket limit exceeded"},
+	}
+	for _, tt := range areaTest {
+		buyer := NewCustomer(1, "Customer", 0, 0, 1)
+		item := make([]string, tt.numItem)
+		got := buyer.AddItem(item)
+		if got != tt.want {
+			t.Errorf("got %s want %s", got, tt.want)
+		}
 	}
 }

@@ -31,22 +31,18 @@ func IsOrderAccept(buyer Customer) bool {
 	}
 }
 
-func (buyer *Customer) AddOrder() {
+func (buyer *Customer) AddOrder(numOrder int) string {
+	buyer.CountOrder += numOrder
 	if IsOrderAccept(*buyer) == true {
-		buyer.CountOrder++
 		order.NewOrder(1, "Item", order.PENDING)
+		return "Order Added"
 	}
+	return "Order limit exceeded"
 }
 
-func (buyer *Customer) SumOrder() int {
+func (buyer *Customer) GetSumOrder() int {
 	return buyer.CountOrder
 }
-
-// func (buyer *Customer) AddItem(numitem int){
-// 	if IsOrderAccept(*buyer) == true {
-// 		buyer.CountItem++
-// 	}
-// }
 
 func (buyer *Customer) AddItem(item []string) string {
 	numitem := len(item)
@@ -57,7 +53,7 @@ func (buyer *Customer) AddItem(item []string) string {
 	return "Your basket limit exceeded"
 }
 
-func (buyer *Customer) SumItem() int {
+func (buyer *Customer) GetSumItem() int {
 	return buyer.CountItem
 }
 
