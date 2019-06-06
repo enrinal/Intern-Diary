@@ -1,17 +1,5 @@
 package order
 
-// //PENDING const for declare statusOrder = 1
-// const PENDING = 1
-
-// //PROCESS const for declare statusOrder = 2
-// const PROCESS = 2
-
-// //SEND const for declare statusOrder = 3
-// const SEND = 3
-
-// //DELIVERED const for declare statusOrder = 4
-// const DELIVERED = 4
-
 const (
 	PENDING   int = 1
 	PROCESS   int = 2
