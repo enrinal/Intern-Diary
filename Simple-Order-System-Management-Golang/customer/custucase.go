@@ -15,20 +15,17 @@ func NewCustomer(ID int, Name string, CountOrder int, CountItem int, Status int)
 	return cust
 }
 
-//REGULARBUYER const for declare buyer with status = 1
-const REGULARBUYER = 1
-
-//SUBCRIPTIONBUYER const for declare buyer with status = 2
-const SUBCRIPTIONBUYER = 2
+const (
+	REGULARBUYER     int = 1
+	SUBCRIPTIONBUYER int = 2
+)
 
 func IsOrderAccept(buyer Customer) bool {
-	if buyer.Status == REGULARBUYER && buyer.CountOrder <= 5 && buyer.CountItem <= 10 {
+	if buyer.Status == REGULARBUYER && buyer.CountOrder <= 5 && buyer.CountItem <= 10 ||
+		buyer.Status == SUBCRIPTIONBUYER && buyer.CountItem <= 10 {
 		return true
-	} else if buyer.Status == SUBCRIPTIONBUYER && buyer.CountItem <= 10 {
-		return true
-	} else {
-		return false
 	}
+	return false
 }
 
 func (buyer *Customer) AddOrder(numOrder int) string {

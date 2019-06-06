@@ -1,16 +1,23 @@
 package order
 
-//PENDING const for declare statusOrder = 1
-const PENDING = 1
+// //PENDING const for declare statusOrder = 1
+// const PENDING = 1
 
-//PROCESS const for declare statusOrder = 2
-const PROCESS = 2
+// //PROCESS const for declare statusOrder = 2
+// const PROCESS = 2
 
-//SEND const for declare statusOrder = 3
-const SEND = 3
+// //SEND const for declare statusOrder = 3
+// const SEND = 3
 
-//DELIVERED const for declare statusOrder = 4
-const DELIVERED = 4
+// //DELIVERED const for declare statusOrder = 4
+// const DELIVERED = 4
+
+const (
+	PENDING   int = 1
+	PROCESS   int = 2
+	SEND      int = 3
+	DELIVERED int = 4
+)
 
 func NewOrder(ID int, Item string, Status int) *Order {
 	order := new(Order)
