@@ -16,6 +16,7 @@ func main() {
 	// order.OrderProcess()
 	// usecase.PrintOrder(order)
 	buyer := customer.NewCustomer(1, "Enrinal", 1, 1, 1)
-	buyer.Order()
-	customer.PrintUser(*buyer)
+	buyer.AddOrder(1)
+	// buyer.Order()
+	// customer.PrintUser(*buyer)
 }

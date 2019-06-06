@@ -21,8 +21,6 @@ const REGULARBUYER = 1
 //SUBCRIPTIONBUYER const for declare buyer with status = 2
 const SUBCRIPTIONBUYER = 2
 
-
-
 func IsOrderAccept(buyer Customer) bool {
 	if buyer.Status == REGULARBUYER && buyer.CountOrder <= 5 && buyer.CountItem <= 10 {
 		return true
@@ -33,23 +31,33 @@ func IsOrderAccept(buyer Customer) bool {
 	}
 }
 
-func (buyer *Customer) AddOrder(numorder int){
+func (buyer *Customer) AddOrder() {
 	if IsOrderAccept(*buyer) == true {
 		buyer.CountOrder++
+		order.NewOrder(1, "Item", order.PENDING)
 	}
 }
 
-func (buyer *Customer) SumOrder() int{
+func (buyer *Customer) SumOrder() int {
 	return buyer.CountOrder
 }
 
-func (buyer *Customer) AddItem(numitem int){
+// func (buyer *Customer) AddItem(numitem int){
+// 	if IsOrderAccept(*buyer) == true {
+// 		buyer.CountItem++
+// 	}
+// }
+
+func (buyer *Customer) AddItem(item []string) string {
+	numitem := len(item)
+	buyer.CountItem += numitem
 	if IsOrderAccept(*buyer) == true {
-		buyer.CountItem++
+		return "Item Added"
 	}
+	return "Your basket limit exceeded"
 }
 
-func (buyer *Customer) SumItem() int{
+func (buyer *Customer) SumItem() int {
 	return buyer.CountItem
 }
 
@@ -57,7 +65,7 @@ func PrintCust(buyer Customer) {
 	fmt.Printf("%d %s %d %d %d \n", buyer.ID, buyer.Name, buyer.CountItem, buyer.CountOrder, buyer.Status)
 }
 
-func PrintOrder(order order.Order){
+func PrintOrder(order order.Order) {
 	fmt.Println("Order id: ", order.ID)
 	fmt.Println("Status : ", order.Status)
 }
