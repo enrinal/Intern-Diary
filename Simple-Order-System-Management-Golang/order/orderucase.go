@@ -1,10 +1,10 @@
 package order
 
 const (
-	PENDING   int = 1
-	PROCESS   int = 2
-	SEND      int = 3
-	DELIVERED int = 4
+	Pending = iota + 1
+	Process
+	Send
+	Delivered
 )
 
 func NewOrder(ID int, Item string, Status int) *Order {
@@ -16,24 +16,24 @@ func NewOrder(ID int, Item string, Status int) *Order {
 }
 
 func (order *Order) OrderProcess() string {
-	if order.Status == PENDING {
-		order.Status = PROCESS
+	if order.Status == Pending {
+		order.Status = Process
 		return "Order Process"
 	}
 	return "Error Change Order Status to Process"
 }
 
 func (order *Order) OrderSend() string {
-	if order.Status == PROCESS {
-		order.Status = SEND
+	if order.Status == Process {
+		order.Status = Send
 		return "Order Send"
 	}
 	return "Error Change Order Status to Send"
 }
 
 func (order *Order) OrderDelivered() string {
-	if order.Status == SEND {
-		order.Status = DELIVERED
+	if order.Status == Send {
+		order.Status = Delivered
 		return "Order Delivered"
 	}
 	return "Error Change Order Status to Delivered"

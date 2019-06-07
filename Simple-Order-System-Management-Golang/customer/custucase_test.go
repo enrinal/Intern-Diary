@@ -8,11 +8,11 @@ func TestOrder(t *testing.T) {
 		custStatus int
 		want       string
 	}{
-		{1, REGULARBUYER, "Order Added"},
-		{1, SUBCRIPTIONBUYER, "Order Added"},
-		{5, REGULARBUYER, "Order Added"},
-		{6, REGULARBUYER, "Order limit exceeded"},
-		{6, SUBCRIPTIONBUYER, "Order Added"},
+		{1, RegularBuyer, "Order Added"},
+		{1, SubcriptionBuyer, "Order Added"},
+		{5, RegularBuyer, "Order Added"},
+		{6, RegularBuyer, "Order limit exceeded"},
+		{6, SubcriptionBuyer, "Order Added"},
 	}
 	for _, tt := range areaTest {
 		buyer := NewCustomer(1, "Customer", 0, 1, tt.custStatus)

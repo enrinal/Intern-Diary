@@ -7,8 +7,8 @@ func TestOrderProcess(t *testing.T) {
 		orderStatus int
 		want        string
 	}{
-		{PENDING, "Order Process"},
-		{SEND, "Error Change Order Status to Process"},
+		{Pending, "Order Process"},
+		{Send, "Error Change Order Status to Process"},
 	}
 	for _, tt := range areaTest {
 		order := NewOrder(1, "Item", tt.orderStatus)
@@ -24,8 +24,8 @@ func TestOrderSend(t *testing.T) {
 		orderStatus int
 		want        string
 	}{
-		{PROCESS, "Order Send"},
-		{DELIVERED, "Error Change Order Status to Send"},
+		{Process, "Order Send"},
+		{Delivered, "Error Change Order Status to Send"},
 	}
 	for _, tt := range areaTest {
 		order := NewOrder(1, "Item", tt.orderStatus)
@@ -41,8 +41,8 @@ func TestOrderDelivered(t *testing.T) {
 		orderStatus int
 		want        string
 	}{
-		{SEND, "Order Delivered"},
-		{DELIVERED, "Error Change Order Status to Delivered"},
+		{Send, "Order Delivered"},
+		{Delivered, "Error Change Order Status to Delivered"},
 	}
 	for _, tt := range areaTest {
 		order := NewOrder(1, "Item", tt.orderStatus)

@@ -16,13 +16,13 @@ func NewCustomer(ID int, Name string, CountOrder int, CountItem int, Status int)
 }
 
 const (
-	REGULARBUYER     int = 1
-	SUBCRIPTIONBUYER int = 2
+	RegularBuyer = iota + 1
+	SubcriptionBuyer
 )
 
 func IsOrderAccept(buyer Customer) bool {
-	if buyer.Status == REGULARBUYER && buyer.CountOrder <= 5 && buyer.CountItem <= 10 ||
-		buyer.Status == SUBCRIPTIONBUYER && buyer.CountItem <= 10 {
+	if (buyer.Status == RegularBuyer && buyer.CountOrder <= 5 && buyer.CountItem <= 10) ||
+		(buyer.Status == SubcriptionBuyer && buyer.CountItem <= 10) {
 		return true
 	}
 	return false
@@ -31,7 +31,7 @@ func IsOrderAccept(buyer Customer) bool {
 func (buyer *Customer) AddOrder(numOrder int) string {
 	buyer.CountOrder += numOrder
 	if IsOrderAccept(*buyer) == true {
-		order.NewOrder(1, "Item", order.PENDING)
+		order.NewOrder(1, "Item", order.Pending)
 		return "Order Added"
 	}
 	return "Order limit exceeded"
@@ -42,8 +42,7 @@ func (buyer *Customer) GetSumOrder() int {
 }
 
 func (buyer *Customer) AddItem(item []string) string {
-	numitem := len(item)
-	buyer.CountItem += numitem
+	buyer.CountItem += len(item)
 	if IsOrderAccept(*buyer) == true {
 		return "Item Added"
 	}
@@ -62,13 +61,3 @@ func PrintOrder(order order.Order) {
 	fmt.Println("Order id: ", order.ID)
 	fmt.Println("Status : ", order.Status)
 }
-
-// func (buyer *Customer) AddItem(item domain.Item) bool {
-// 	if IsOrderAccept(*buyer) == true {
-// 		buyer.CountItem++
-// 		//domain.Order{buyer.Id,buyer.Customer,[]domain.Item{item}}
-// 		return true
-// 	} else {
-// 		return false
-// 	}
-// }
