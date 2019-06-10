@@ -19,4 +19,3 @@ func (c *CustomerUsecase)GetAllCustomer() []*models.Customer{
 	listcustomer,_ := c.customers.Fetch()
 	return listcustomer
 }
-
