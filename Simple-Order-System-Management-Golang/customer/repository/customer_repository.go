@@ -11,7 +11,7 @@ func Fetch() ([]*models.Customer, error) {
 	return listcustomer, nil
 }
 
-func GetById(id int) (*models.Customer, error) {
+func GetById(ID int64) (*models.Customer, error) {
 	customer := &models.Customer{}
 	return customer, nil
 }
