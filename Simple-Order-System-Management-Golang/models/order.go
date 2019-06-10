@@ -1,8 +1,8 @@
 package models
 
 type Order struct {
-	ID       int
+	ID       int64
+	IDCust	 int64
 	Item     string
-	Customer Customer
-	Status   int
+	Status   int64
 }
