@@ -20,3 +20,7 @@ func (o *OrderUsecase)GetAllOrder() []*models.Order{
 	return listorder
 }
 
+func (o *OrderUsecase)GetOrderById(ID int64) *models.Order{
+	order,_ := o.orders.GetOrderById(ID)
+	return order
+}
