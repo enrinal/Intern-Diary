@@ -2,7 +2,8 @@ package customer
 
 import (
 	"fmt"
-	"order/order"
+
+	"gitlab.warungpintar.co/enrinal/intern-diary/simple-order/order"
 )
 
 func NewCustomer(ID int, Name string, CountOrder int, CountItem int, Status int) *Customer {
