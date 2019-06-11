@@ -77,3 +77,26 @@ func TestOrderDelivered(t *testing.T) {
 		}
 	})
 }
+
+func TestAllOrderByCustomerId (t *testing.T){
+	t.Run("success", func(t *testing.T) {
+		Ordermocks := &mocks.Usecase{}
+		Ordermocks.On("GetAllOrderById",int64(1)).Return([]*models.Order{
+		&models.Order{IDCust : 1, Item:"Mobil"},
+		&models.Order{IDCust : 1, Item:"Mobil"},
+		&models.Order{IDCust : 1, Item:"Mobil"},
+		&models.Order{IDCust : 1, Item:"Mobil"},
+		&models.Order{IDCust : 1, Item:"Mobil"},
+		&models.Order{IDCust : 1, Item:"Mobil"},
+		&models.Order{IDCust : 1, Item:"Mobil"},
+		&models.Order{IDCust : 1, Item:"Mobil"},
+		&models.Order{IDCust : 1, Item:"Mobil"},
+		&models.Order{IDCust : 1, Item:"Mobil"},
+		}, nil)
+		Order := NewOrderUsecase(Ordermocks)
+		c := Order.GetAllOrderById(1)
+		if len(c) != 10{		
+			t.Errorf("Error harus 10, yang di dapat %d",len(c))
+		}
+	})
+}

@@ -59,3 +59,8 @@ func (o *OrderUsecase) ChangeOrderDelivered(ID int64) string {
 	}
 	return "Error Change Status to Delivered"
 }
+
+func (o *OrderUsecase) GetAllOrderById(ID int64) []*models.Order{
+	listorder,_ := o.orders.GetAllOrderById(ID)
+	return listorder
+}

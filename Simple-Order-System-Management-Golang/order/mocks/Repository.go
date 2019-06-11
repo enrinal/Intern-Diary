@@ -75,6 +75,29 @@ func (_m *Repository) GetAllOrder() ([]*models.Order, error) {
 	return r0, r1
 }
 
+// GetAllOrderById provides a mock function with given fields: ID
+func (_m *Repository) GetAllOrderById(ID int64) ([]*models.Order, error) {
+	ret := _m.Called(ID)
+
+	var r0 []*models.Order
+	if rf, ok := ret.Get(0).(func(int64) []*models.Order); ok {
+		r0 = rf(ID)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]*models.Order)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(int64) error); ok {
+		r1 = rf(ID)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // GetOrderById provides a mock function with given fields: ID
 func (_m *Repository) GetOrderById(ID int64) (*models.Order, error) {
 	ret := _m.Called(ID)

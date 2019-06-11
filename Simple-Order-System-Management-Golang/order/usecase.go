@@ -6,6 +6,7 @@ import (
 
 type Usecase interface {
 	GetAllOrder() ([]*models.Order, error)
+	GetAllOrderById(ID int64) ([]*models.Order, error)
 	GetOrderById(ID int64) (*models.Order, error)
 	ChangeOrderSend(ID int64) (error)
 	ChangeOrderProcess(ID int64) (error)
