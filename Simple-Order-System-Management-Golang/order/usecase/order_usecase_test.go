@@ -41,3 +41,15 @@ func TestGetOrderById (t *testing.T){
 		}
 	})
 }
+
+func TestOrderProcess(t *testing.T) {
+	t.Run("success", func(t *testing.T) {
+		Ordermocks := &mocks.Usecase{}
+		Ordermocks.On("GetOrderById", int64(2)).Return(&models.Order{ID : 2, Item:"Mobil", Status:1}, nil)
+		Order := NewOrderUsecase(Ordermocks)
+		c := Order.ChangeOrderProcess(int64(2))
+		if c != "Order Process" {
+			t.Errorf("Error not found id")
+		}
+	})
+}
