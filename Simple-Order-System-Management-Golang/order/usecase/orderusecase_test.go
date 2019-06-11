@@ -52,6 +52,15 @@ func TestOrderProcess(t *testing.T) {
 			t.Errorf("Error not found id")
 		}
 	})
+	t.Run("success", func(t *testing.T) {
+		Ordermocks := &mocks.Usecase{}
+		Ordermocks.On("GetOrderById", int64(2)).Return(&models.Order{ID : 2, Item:"Mobil", Status:2}, nil)
+		Order := NewOrderUsecase(Ordermocks)
+		c := Order.ChangeOrderProcess(int64(2))
+		if c != "Error Change Status to Process" {
+			t.Errorf("Error not found id")
+		}
+	})
 }
 
 func TestOrderSend(t *testing.T) {
@@ -64,6 +73,15 @@ func TestOrderSend(t *testing.T) {
 			t.Errorf("Error not found id")
 		}
 	})
+	t.Run("success", func(t *testing.T) {
+		Ordermocks := &mocks.Usecase{}
+		Ordermocks.On("GetOrderById", int64(2)).Return(&models.Order{ID : 2, Item:"Mobil", Status:1}, nil)
+		Order := NewOrderUsecase(Ordermocks)
+		c := Order.ChangeOrderSend(int64(2))
+		if c != "Error Change Status to Send" {
+			t.Errorf("Error not found id")
+		}
+	})
 }
 
 func TestOrderDelivered(t *testing.T) {
@@ -73,6 +91,15 @@ func TestOrderDelivered(t *testing.T) {
 		Order := NewOrderUsecase(Ordermocks)
 		c := Order.ChangeOrderDelivered(int64(2))
 		if c != "Order Delivered" {
+			t.Errorf("Error not found id")
+		}
+	})
+	t.Run("success", func(t *testing.T) {
+		Ordermocks := &mocks.Usecase{}
+		Ordermocks.On("GetOrderById", int64(2)).Return(&models.Order{ID : 2, Item:"Mobil", Status:1}, nil)
+		Order := NewOrderUsecase(Ordermocks)
+		c := Order.ChangeOrderDelivered(int64(2))
+		if c != "Error Change Status to Delivered" {
 			t.Errorf("Error not found id")
 		}
 	})
