@@ -3,6 +3,7 @@ package usecase
 import (
 	"gitlab.warungpintar.co/enrinal/intern-diary/simple-order/models"
 	"gitlab.warungpintar.co/enrinal/intern-diary/simple-order/order"
+	"gitlab.warungpintar.co/enrinal/intern-diary/simple-order/customer"
 )
 
 const (
@@ -14,11 +15,13 @@ const (
 
 type OrderUsecase struct{
 	orders order.Repository
+	customer customer.Repository
 }
 
-func NewOrderUsecase(orders order.Repository) OrderUsecase {
+func NewOrderUsecase(orders order.Repository, customer customer.Repository) OrderUsecase {
 	return OrderUsecase{
 		orders : orders,
+		customer : customer,
 	}
 }
 

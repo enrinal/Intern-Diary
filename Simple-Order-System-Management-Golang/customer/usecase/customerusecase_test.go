@@ -42,3 +42,24 @@ func TestGetCustomerById (t *testing.T){
 	})
 }
 
+func TestIsCustomerSubcription (t *testing.T){
+	t.Run("success", func(t *testing.T) {
+		customermocks := &mocks.Usecase{}
+		customermocks.On("GetById", int64(2)).Return(&models.Customer{ID:2, Name:"Name", Status: 2},nil)
+		customer := NewCustomerUsecase(customermocks)
+		c := customer.IsCustomerSubricption(int64(2))
+		if c != true {
+			t.Errorf("Error not found id")
+		}
+	})
+	t.Run("success", func(t *testing.T) {
+		customermocks := &mocks.Usecase{}
+		customermocks.On("GetById", int64(2)).Return(&models.Customer{ID:2, Name:"Name", Status: 1},nil)
+		customer := NewCustomerUsecase(customermocks)
+		c := customer.IsCustomerSubricption(int64(2))
+		if c != false {
+			t.Errorf("Error not found id")
+		}
+	})
+}
+
