@@ -64,3 +64,8 @@ func (o *OrderUsecase) GetAllOrderById(ID int64) []*models.Order{
 	listorder,_ := o.orders.GetAllOrderById(ID)
 	return listorder
 }
+
+func (o *OrderUsecase) CountOrderCust(ID int64) int{
+	listorder,_ := o.orders.GetAllOrderById(ID)
+	return len(listorder)
+}

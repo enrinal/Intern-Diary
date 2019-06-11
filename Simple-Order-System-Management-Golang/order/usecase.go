@@ -12,4 +12,5 @@ type Usecase interface {
 	ChangeOrderProcess(ID int64) (error)
 	ChangeOrderDelivered(ID int64) (error)
 	GetOrderStatus(ID int64)(status string)
+	CountOrderCust(ID int64) (int)
 }

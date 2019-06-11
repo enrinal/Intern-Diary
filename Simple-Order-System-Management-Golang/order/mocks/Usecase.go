@@ -52,6 +52,20 @@ func (_m *Usecase) ChangeOrderSend(ID int64) error {
 	return r0
 }
 
+// CountOrderCust provides a mock function with given fields: ID
+func (_m *Usecase) CountOrderCust(ID int64) int {
+	ret := _m.Called(ID)
+
+	var r0 int
+	if rf, ok := ret.Get(0).(func(int64) int); ok {
+		r0 = rf(ID)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	return r0
+}
+
 // GetAllOrder provides a mock function with given fields:
 func (_m *Usecase) GetAllOrder() ([]*models.Order, error) {
 	ret := _m.Called()
