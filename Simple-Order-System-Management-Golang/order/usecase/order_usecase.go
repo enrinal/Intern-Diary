@@ -42,3 +42,11 @@ func (o *OrderUsecase) ChangeOrderProcess(ID int64) string {
 	return "Error Change Status to Order"
 }
 
+func (o *OrderUsecase) ChangeOrderSend(ID int64) string {
+	order,_ := o.orders.GetOrderById(ID)
+	if order.Status == Process {
+		order.Status = Send
+		return "Order Send"
+	}
+	return "Error Change Status to Order"
+}
