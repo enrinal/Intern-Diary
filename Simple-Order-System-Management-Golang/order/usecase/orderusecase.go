@@ -1,9 +1,14 @@
 package usecase
 
 import (
+	"gitlab.warungpintar.co/enrinal/intern-diary/simple-order/customer"
 	"gitlab.warungpintar.co/enrinal/intern-diary/simple-order/models"
 	"gitlab.warungpintar.co/enrinal/intern-diary/simple-order/order"
-	"gitlab.warungpintar.co/enrinal/intern-diary/simple-order/customer"
+)
+
+const (
+	RegularBuyer = iota + 1
+	SubcriptionBuyer
 )
 
 const (
@@ -13,31 +18,30 @@ const (
 	Delivered
 )
 
-type OrderUsecase struct{
-	orders order.Repository
+type OrderUsecase struct {
+	orders   order.Repository
 	customer customer.Repository
 }
 
 func NewOrderUsecase(orders order.Repository, customer customer.Repository) OrderUsecase {
 	return OrderUsecase{
-		orders : orders,
-		customer : customer,
+		orders:   orders,
+		customer: customer,
 	}
 }
 
-
-func (o *OrderUsecase)GetAllOrder() []*models.Order{
-	listorder,_ := o.orders.GetAllOrder()
+func (o *OrderUsecase) GetAllOrder() []*models.Order {
+	listorder, _ := o.orders.GetAllOrder()
 	return listorder
 }
 
-func (o *OrderUsecase)GetOrderById(ID int64) *models.Order{
-	order,_ := o.orders.GetOrderById(ID)
+func (o *OrderUsecase) GetOrderById(ID int64) *models.Order {
+	order, _ := o.orders.GetOrderById(ID)
 	return order
 }
 
 func (o *OrderUsecase) ChangeOrderProcess(ID int64) string {
-	order,_ := o.orders.GetOrderById(ID)
+	order, _ := o.orders.GetOrderById(ID)
 	if order.Status == Pending {
 		order.Status = Process
 		return "Order Process"
@@ -46,7 +50,7 @@ func (o *OrderUsecase) ChangeOrderProcess(ID int64) string {
 }
 
 func (o *OrderUsecase) ChangeOrderSend(ID int64) string {
-	order,_ := o.orders.GetOrderById(ID)
+	order, _ := o.orders.GetOrderById(ID)
 	if order.Status == Process {
 		order.Status = Send
 		return "Order Send"
@@ -55,7 +59,7 @@ func (o *OrderUsecase) ChangeOrderSend(ID int64) string {
 }
 
 func (o *OrderUsecase) ChangeOrderDelivered(ID int64) string {
-	order,_ := o.orders.GetOrderById(ID)
+	order, _ := o.orders.GetOrderById(ID)
 	if order.Status == Send {
 		order.Status = Delivered
 		return "Order Delivered"
@@ -63,12 +67,21 @@ func (o *OrderUsecase) ChangeOrderDelivered(ID int64) string {
 	return "Error Change Status to Delivered"
 }
 
-func (o *OrderUsecase) GetAllOrderById(ID int64) []*models.Order{
-	listorder,_ := o.orders.GetAllOrderById(ID)
+func (o *OrderUsecase) GetAllOrderById(ID int64) []*models.Order {
+	listorder, _ := o.orders.GetAllOrderById(ID)
 	return listorder
 }
 
-func (o *OrderUsecase) CountOrderCust(ID int64) int{
-	listorder,_ := o.orders.GetAllOrderById(ID)
+func (o *OrderUsecase) CountOrderCust(ID int64) int {
+	listorder, _ := o.orders.GetAllOrderById(ID)
 	return len(listorder)
+}
+
+func (o *OrderUsecase) CheckLimitOrder(ID int64) bool {
+	customer, _ := o.customer.GetById(ID)
+	order, _ := o.orders.GetAllOrderById(ID)
+	if (customer.Status == RegularBuyer && len(order) <= 5) || (customer.Status == SubcriptionBuyer) {
+		return true
+	}
+	return false
 }
