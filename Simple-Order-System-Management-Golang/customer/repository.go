@@ -7,7 +7,5 @@ import (
 // Repository represent the customer repository contract
 type Repository interface {
 	Fetch() ([]*models.Customer, error)
-	GetById(id int64) (*models.Customer, error)
-	GetAllCustomer() []*models.Customer
-	GetCustomerById(ID int64) *models.Customer
+	GetCustomerById(id int64) (*models.Customer, error)
 }
