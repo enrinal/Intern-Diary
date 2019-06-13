@@ -36,7 +36,16 @@ func (m *mysqlOrderRepository) GetAllOrder() ([]*models.Order, error) {
 }
 
 func (m *mysqlOrderRepository) GetOrderById(ID int64) (*models.Order, error) {
+	row, err := m.queryRow("SELECT id, idcust, item, status FROM order WHERE id=$1", ID)
+	if err != nil {
+		return nil, err
+	}
 	order := &models.Order{}
+
+	err = row.Scan(&order.ID, &order.IDCust, &order.Item, &order.Status)
+	if err != nil {
+		return nil, err
+	}
 	return order, nil
 }
 
