@@ -93,7 +93,12 @@ func (m *mysqlOrderRepository) ChangeOrderProcess(ID int64) error {
 	return err
 }
 func (m *mysqlOrderRepository) ChangeOrderDelivered(ID int64) error {
-	return nil
+	rows, err := m.query("UPDATE order SET status=$1 WHERE id=$2", Delivered, ID)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+	return err
 }
 func (m *mysqlOrderRepository) GetOrderStatus(ID int64) (status string) {
 	return "nil"
