@@ -59,3 +59,29 @@ func TestGetOrderById(t *testing.T) {
 	assert.Equal(t, int64(1), order.Status)
 	assert.NotNil(t, order)
 }
+
+func TestGetAllOrderById(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	defer db.Close()
+
+	rows := sqlmock.NewRows([]string{"id", "idcust", "item", "status"}).
+		AddRow(1, "1", "mobil", 1).
+		AddRow(2, "1", "rumah", 2)
+
+	custId := int64(1)
+	mock.ExpectPrepare("SELECT id, idcust, item, status FROM order WHERE idcust=\\$1").
+		ExpectQuery().
+		WithArgs(custId).
+		WillReturnRows(rows)
+
+	or := NewMysqlOrderRepository(db)
+	var orders []*models.Order
+	orders, err = or.GetAllOrderById(custId)
+
+	assert.NoError(t, err)
+	assert.NotNil(t, orders)
+	assert.Len(t, orders, 2)
+}
