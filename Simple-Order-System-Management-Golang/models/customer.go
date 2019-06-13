@@ -1,7 +1,7 @@
 package models
 
 type Customer struct {
-	ID         int
-	Name       string
-	Status     int
+	ID     int64
+	Name   string
+	Status int
 }
