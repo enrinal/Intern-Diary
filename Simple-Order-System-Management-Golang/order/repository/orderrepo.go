@@ -12,6 +12,13 @@ type mysqlOrderRepository struct {
 	Conn *sql.DB
 }
 
+const (
+	Pending = iota + 1
+	Process
+	Send
+	Delivered
+)
+
 func NewMysqlOrderRepository(Conn *sql.DB) order.Repository {
 	return &mysqlOrderRepository{Conn}
 }
@@ -69,7 +76,12 @@ func (m *mysqlOrderRepository) GetAllOrderById(ID int64) ([]*models.Order, error
 }
 
 func (m *mysqlOrderRepository) ChangeOrderSend(ID int64) error {
-	return nil
+	rows, err := m.query("UPDATE order SET status=$1 WHERE id=$2", Send, ID)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+	return err
 }
 
 func (m *mysqlOrderRepository) ChangeOrderProcess(ID int64) error {
