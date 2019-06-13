@@ -11,5 +11,4 @@ type Repository interface {
 	ChangeOrderSend(ID int64) error
 	ChangeOrderProcess(ID int64) error
 	ChangeOrderDelivered(ID int64) error
-	GetOrderStatus(ID int64) (status string)
 }

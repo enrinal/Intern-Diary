@@ -100,9 +100,6 @@ func (m *mysqlOrderRepository) ChangeOrderDelivered(ID int64) error {
 	defer rows.Close()
 	return err
 }
-func (m *mysqlOrderRepository) GetOrderStatus(ID int64) (status string) {
-	return "nil"
-}
 
 // query to get multiple row
 func (m *mysqlOrderRepository) query(q string, args ...interface{}) (*sql.Rows, error) {
