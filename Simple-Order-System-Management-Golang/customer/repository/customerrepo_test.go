@@ -23,11 +23,38 @@ func TestFetch(t *testing.T) {
 		ExpectQuery().
 		WillReturnRows(rows)
 
-	pr := NewMysqlCustomerRepository(db)
+	cr := NewMysqlCustomerRepository(db)
 	var customers []*models.Customer
-	customers, err = pr.Fetch()
+	customers, err = cr.Fetch()
 
 	assert.NoError(t, err)
 	assert.NotNil(t, customers)
 	assert.Len(t, customers, 2)
+}
+
+func TestGetCustomerById(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	defer db.Close()
+
+	rows := sqlmock.NewRows([]string{"id", "name", "status"}).
+		AddRow(1, "Muhamad Enrinal", 1)
+
+	customerId := int64(1) // try get id = 1
+	mock.ExpectPrepare("SELECT id, name, status FROM customer WHERE id=\\$1").
+		ExpectQuery().
+		WithArgs(customerId).
+		WillReturnRows(rows)
+
+	cr := NewMysqlCustomerRepository(db)
+	var customer *models.Customer
+	customer, err = cr.GetCustomerById(customerId)
+
+	assert.NoError(t, err)
+	assert.Equal(t, int64(customerId), customer.ID)
+	assert.Equal(t, "Muhamad Enrinal", customer.Name)
+	assert.Equal(t, 1, customer.Status)
+	assert.NotNil(t, customer)
 }

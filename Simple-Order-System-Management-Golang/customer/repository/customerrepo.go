@@ -37,8 +37,19 @@ func (m *mysqlCustomerRepository) Fetch() ([]*models.Customer, error) {
 }
 
 func (m *mysqlCustomerRepository) GetCustomerById(ID int64) (*models.Customer, error) {
+	row, err := m.queryRow("SELECT id, name, status FROM customer WHERE id=$1", ID)
+	if err != nil {
+		return nil, err
+	}
+
 	customer := &models.Customer{}
+
+	err = row.Scan(&customer.ID, &customer.Name, &customer.Status)
+	if err != nil {
+		return nil, err
+	}
 	return customer, nil
+
 }
 
 // query to get multiple row
