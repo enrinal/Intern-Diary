@@ -1,6 +1,7 @@
 package models
 
 type Cart struct {
-	Customer Customer
-	Items    map[string]Item
+	IDCart int64
+	IDCust int64
+	Items  string
 }
