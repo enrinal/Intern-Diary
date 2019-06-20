@@ -10,14 +10,13 @@ import (
 func TestGetCustCart(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		Cartmocks := &mocks.Usecase{}
-		Cartmocks.On("GetCustCart").Return([]*models.Cart{
-			&models.Cart{IDCart: 1, IDCust: 2, Items: "mobil"},
-			&models.Cart{IDCart: 2, IDCust: 2, Items: "mobil"},
-			&models.Cart{IDCart: 3, IDCust: 2, Items: "mobil"},
+		Cartmocks.On("GetCustCart", int64(2)).Return([]*models.Cart{
+			&models.Cart{IDCart: 1, IDCust: 2, Items: []string{"mobil", "motor"}},
+			&models.Cart{IDCart: 2, IDCust: 2, Items: []string{"mobil", "motor"}},
+			&models.Cart{IDCart: 3, IDCust: 2, Items: []string{"mobil", "motor"}},
 		}, nil)
-		Cart := NewCartUsecase(Cartmocks)
-		custid := 2
-		c, _ := Cart.GetCustCart(int64(custid))
+		cart := NewCartUsecase(Cartmocks)
+		c, _ := cart.GetCustCart(int64(2))
 		if len(c) != 3 {
 			t.Errorf("Harus mendapatakan 3, yang didapat %d", len(c))
 		}

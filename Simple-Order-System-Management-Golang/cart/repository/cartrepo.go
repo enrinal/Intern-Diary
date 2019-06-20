@@ -4,7 +4,7 @@ import (
 	"gitlab.warungpintar.co/enrinal/intern-diary/simple-order/models"
 )
 
-func GetCustCart() ([]*models.Cart, error) {
+func GetCustCart(idcust int64) ([]*models.Cart, error) {
 	listcart := make([]*models.Cart, 0)
 	return listcart, nil
 }
