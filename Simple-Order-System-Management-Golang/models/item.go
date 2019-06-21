@@ -1,7 +1,7 @@
 package models
 
 type Item struct {
-	Id    string
+	Id    int64
 	Name  string
 	Price string
 	Qty   int
