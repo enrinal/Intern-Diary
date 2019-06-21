@@ -52,6 +52,20 @@ func (_m *Usecase) ChangeOrderSend(ID int64) error {
 	return r0
 }
 
+// CheckLimitOrder provides a mock function with given fields: ID
+func (_m *Usecase) CheckLimitOrder(ID int64) bool {
+	ret := _m.Called(ID)
+
+	var r0 bool
+	if rf, ok := ret.Get(0).(func(int64) bool); ok {
+		r0 = rf(ID)
+	} else {
+		r0 = ret.Get(0).(bool)
+	}
+
+	return r0
+}
+
 // CountOrderCust provides a mock function with given fields: ID
 func (_m *Usecase) CountOrderCust(ID int64) int {
 	ret := _m.Called(ID)
@@ -133,18 +147,4 @@ func (_m *Usecase) GetOrderById(ID int64) (*models.Order, error) {
 	}
 
 	return r0, r1
-}
-
-// GetOrderStatus provides a mock function with given fields: ID
-func (_m *Usecase) GetOrderStatus(ID int64) string {
-	ret := _m.Called(ID)
-
-	var r0 string
-	if rf, ok := ret.Get(0).(func(int64) string); ok {
-		r0 = rf(ID)
-	} else {
-		r0 = ret.Get(0).(string)
-	}
-
-	return r0
 }

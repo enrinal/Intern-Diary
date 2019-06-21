@@ -78,7 +78,7 @@ func (o *OrderUsecase) CountOrderCust(ID int64) int {
 }
 
 func (o *OrderUsecase) CheckLimitOrder(ID int64) bool {
-	customer, _ := o.customer.GetById(ID)
+	customer, _ := o.customer.GetCustomerById(ID)
 	order, _ := o.orders.GetAllOrderById(ID)
 	if (customer.Status == RegularBuyer && len(order) <= 5) || (customer.Status == SubcriptionBuyer) {
 		return true

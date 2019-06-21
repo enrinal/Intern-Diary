@@ -15,11 +15,17 @@ func NewCustomerUsecase(customers customer.Repository) CustomerUsecase {
 	}
 }
 func (c *CustomerUsecase) GetAllCustomer() []*models.Customer {
-	listcustomer, _ := c.customers.Fetch()
+	listcustomer, err := c.customers.Fetch()
+	if err != nil {
+		return nil
+	}
 	return listcustomer
 }
 
-func (c *CustomerUsecase) GetCustomerById(ID int64) *models.Customer {
-	customer, _ := c.customers.GetById(ID)
-	return customer
+func (c *CustomerUsecase) GetCustomerById(ID int64) (*models.Customer, error) {
+	customer, err := c.customers.GetCustomerById(ID)
+	if err != nil {
+		return nil, err
+	}
+	return customer, nil
 }
