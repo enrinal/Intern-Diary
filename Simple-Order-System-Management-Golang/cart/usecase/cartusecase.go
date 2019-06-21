@@ -16,7 +16,7 @@ func NewCartUsecase(cart cart.Repository) CartUsecase {
 }
 
 func (c *CartUsecase) GetCustCart(custid int64) ([]*models.Cart, error) {
-	listcart, err := c.GetCustCart(custid)
+	listcart, err := c.cart.FindCustCart(custid)
 	if err != nil {
 		return nil, err
 	}

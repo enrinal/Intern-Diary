@@ -10,22 +10,8 @@ type Repository struct {
 	mock.Mock
 }
 
-// AddItem provides a mock function with given fields: item, qty
-func (_m *Repository) AddItem(item string, qty int64) error {
-	ret := _m.Called(item, qty)
-
-	var r0 error
-	if rf, ok := ret.Get(0).(func(string, int64) error); ok {
-		r0 = rf(item, qty)
-	} else {
-		r0 = ret.Error(0)
-	}
-
-	return r0
-}
-
-// GetCustCart provides a mock function with given fields: custid
-func (_m *Repository) GetCustCart(custid int64) ([]*models.Cart, error) {
+// FindCustCart provides a mock function with given fields: custid
+func (_m *Repository) FindCustCart(custid int64) ([]*models.Cart, error) {
 	ret := _m.Called(custid)
 
 	var r0 []*models.Cart
@@ -45,18 +31,4 @@ func (_m *Repository) GetCustCart(custid int64) ([]*models.Cart, error) {
 	}
 
 	return r0, r1
-}
-
-// RemoveItem provides a mock function with given fields: item
-func (_m *Repository) RemoveItem(item string) error {
-	ret := _m.Called(item)
-
-	var r0 error
-	if rf, ok := ret.Get(0).(func(string) error); ok {
-		r0 = rf(item)
-	} else {
-		r0 = ret.Error(0)
-	}
-
-	return r0
 }

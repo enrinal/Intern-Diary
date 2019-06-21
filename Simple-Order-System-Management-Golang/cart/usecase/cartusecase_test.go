@@ -9,8 +9,8 @@ import (
 
 func TestGetCustCart(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
-		Cartmocks := &mocks.Usecase{}
-		Cartmocks.On("GetCustCart", int64(2)).Return([]*models.Cart{
+		Cartmocks := &mocks.Repository{}
+		Cartmocks.On("FindCustCart", int64(2)).Return([]*models.Cart{
 			&models.Cart{IDCart: 1, IDCust: 2, Items: []string{"mobil", "motor"}},
 			&models.Cart{IDCart: 2, IDCust: 2, Items: []string{"mobil", "motor"}},
 			&models.Cart{IDCart: 3, IDCust: 2, Items: []string{"mobil", "motor"}},

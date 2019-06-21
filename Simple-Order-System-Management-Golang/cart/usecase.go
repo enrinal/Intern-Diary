@@ -6,6 +6,6 @@ import (
 
 type Usecase interface {
 	GetCustCart(custid int64) ([]*models.Cart, error)
-	AddItem(item string, qty int64) error
-	RemoveItem(item string) error
+	// AddItem(item string, qty int64) error
+	// RemoveItem(item string) error
 }
