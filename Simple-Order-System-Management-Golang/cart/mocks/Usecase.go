@@ -46,3 +46,17 @@ func (_m *Usecase) GetCustCart(custid int64) ([]*models.Cart, error) {
 
 	return r0, r1
 }
+
+// RemoveItem provides a mock function with given fields: item
+func (_m *Usecase) RemoveItem(item string) error {
+	ret := _m.Called(item)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string) error); ok {
+		r0 = rf(item)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}

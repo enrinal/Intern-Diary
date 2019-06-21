@@ -29,3 +29,11 @@ func (c *CartUsecase) AddItem(item models.Item, qty int64) error {
 	}
 	return nil
 }
+
+func (c *CartUsecase) RemoveItem(item models.Item, qty int64) error {
+	err := c.cart.Remove(item.Name, qty)
+	if err != nil {
+		return err
+	}
+	return nil
+}

@@ -46,3 +46,17 @@ func (_m *Repository) FindCustCart(custid int64) ([]*models.Cart, error) {
 
 	return r0, r1
 }
+
+// Remove provides a mock function with given fields: item, qty
+func (_m *Repository) Remove(item string, qty int64) error {
+	ret := _m.Called(item, qty)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string, int64) error); ok {
+		r0 = rf(item, qty)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}

@@ -13,6 +13,6 @@ func Add(item string, qty int64) error {
 	return nil
 }
 
-func Remove(item string) error {
+func Remove(item string, qty int64) error {
 	return nil
 }
