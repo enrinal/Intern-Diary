@@ -22,3 +22,10 @@ func (c *CartUsecase) GetCustCart(custid int64) ([]*models.Cart, error) {
 	}
 	return listcart, nil
 }
+func (c *CartUsecase) AddItem(item models.Item, qty int64) error {
+	err := c.cart.Add(item.Name, qty)
+	if err != nil {
+		return err
+	}
+	return nil
+}
