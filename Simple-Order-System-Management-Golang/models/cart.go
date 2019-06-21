@@ -1,9 +1,9 @@
 package models
 
 type Cart struct {
-	IDCart int64
-	IDCust int64
-	Items  []Item
-	Qty    int64
-	Prize  int64
+	IDCart int64  `bson:"idcart"`
+	IDCust int64  `bson:"idcust"`
+	Items  []Item `bson:"item"`
+	Qty    int64  `bson:"qty"`
+	Prize  int64  `bson:"prize"`
 }
