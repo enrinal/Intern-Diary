@@ -24,8 +24,8 @@ func (_m *Repository) Add(item string, qty int64) error {
 	return r0
 }
 
-// FindCustCart provides a mock function with given fields: custid
-func (_m *Repository) FindCustCart(custid int64) ([]*models.Cart, error) {
+// FindByCustomerId provides a mock function with given fields: custid
+func (_m *Repository) FindByCustomerId(custid int64) ([]*models.Cart, error) {
 	ret := _m.Called(custid)
 
 	var r0 []*models.Cart

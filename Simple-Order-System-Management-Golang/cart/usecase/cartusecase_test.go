@@ -10,7 +10,7 @@ import (
 func TestGetCustCart(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		Cartmocks := &mocks.Repository{}
-		Cartmocks.On("FindCustCart", int64(2)).Return([]*models.Cart{
+		Cartmocks.On("FindByCustomerId", int64(2)).Return([]*models.Cart{
 			&models.Cart{IDCart: 1, IDCust: 2, Items: []models.Item{models.Item{Id: int64(1), Name: "mobil"},
 				models.Item{Id: int64(1), Name: "mobil"}}},
 			&models.Cart{IDCart: 1, IDCust: 2, Items: []models.Item{models.Item{Id: int64(1), Name: "mobil"},
