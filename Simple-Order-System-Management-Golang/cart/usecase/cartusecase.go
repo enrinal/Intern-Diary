@@ -22,16 +22,16 @@ func (c *CartUsecase) GetCustCart(custid int64) ([]*models.Cart, error) {
 	}
 	return listcart, nil
 }
-func (c *CartUsecase) AddItem(item models.Item, qty int64) error {
-	err := c.cart.Add(item.Name, qty)
+func (c *CartUsecase) AddItem(item models.Item, qty int64, idcart int64) error {
+	err := c.cart.Add(item.Name, qty, idcart)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (c *CartUsecase) RemoveItem(item models.Item, qty int64) error {
-	err := c.cart.Remove(item.Name, qty)
+func (c *CartUsecase) RemoveItem(item models.Item, qty int64, idcart int64) error {
+	err := c.cart.Remove(item.Name, qty, idcart)
 	if err != nil {
 		return err
 	}
