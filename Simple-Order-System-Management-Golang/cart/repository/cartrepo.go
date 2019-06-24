@@ -53,3 +53,19 @@ func Remove(item string, qty int64, idcart int64) error {
 	}
 	return nil
 }
+
+func insert() error { //Testing aja untuk buat attribut baru
+	var session, err = configs.ConnectMO()
+	if err != nil {
+		return err
+	}
+	defer session.Close()
+
+	var collection = session.DB("simpleorder").C("cart")
+	err = collection.Insert(&models.Cart{IDCart: 1, IDCust: 2, Items: []models.Item{models.Item{Id: int64(1), Name: "mobil"},
+		models.Item{Id: int64(1), Name: "mobil"}}})
+	if err != nil {
+		return err
+	}
+	return nil
+}
