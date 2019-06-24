@@ -9,16 +9,13 @@ import (
 	"gopkg.in/mgo.v2"
 )
 
-func init() {
+func ConnectDB() (*sql.DB, error) {
 	viper.SetConfigFile("config.json")
 	err := viper.ReadInConfig()
 
 	if err != nil {
 		panic(err)
 	}
-}
-
-func ConnectDB() (*sql.DB, error) {
 	dbHost := viper.GetString(`database.host`)
 	dbPort := viper.GetString(`database.port`)
 	dbUser := viper.GetString(`database.user`)
