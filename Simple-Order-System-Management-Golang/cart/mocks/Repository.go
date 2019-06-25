@@ -10,13 +10,13 @@ type Repository struct {
 	mock.Mock
 }
 
-// Add provides a mock function with given fields: item, qty, idcart
-func (_m *Repository) Add(item string, qty int64, idcart int64) error {
-	ret := _m.Called(item, qty, idcart)
+// Add provides a mock function with given fields: _a0
+func (_m *Repository) Add(_a0 models.Cart) error {
+	ret := _m.Called(_a0)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(string, int64, int64) error); ok {
-		r0 = rf(item, qty, idcart)
+	if rf, ok := ret.Get(0).(func(models.Cart) error); ok {
+		r0 = rf(_a0)
 	} else {
 		r0 = ret.Error(0)
 	}
