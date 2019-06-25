@@ -22,21 +22,32 @@ func FindByCustomerId(idcust int64) ([]models.Cart, error) {
 	return result, nil
 }
 
-func Add(item string, qty int64, idcart int64) error {
+func Add(cart models.Cart) error {
 	var session, err = configs.ConnectMO()
 	if err != nil {
 		return err
 	}
 	defer session.Close()
+	cartuser := models.Cart{}
 	var collection = session.DB("simpleorder").C("cart")
-	cart := bson.M{"idcart": idcart}
-	additem := bson.M{"$push": bson.M{"item": bson.M{"item_name": item, "qty": qty}}}
-	err := collection.Update(cart, additem)
+	err = collection.Find(bson.M{"idcart": cart.IDCart}).One(&cartuser)
+	if err != nil{
+		_,err = collection.UpsertId(cart.IDCart, cart)
+		if err != nil {
+			return err
+		}
+	}else{
+	match := bson.M{"idcart" : cart.IDCart}
+	change := bson.M{"$push":bson.M{"item":bson.M{"$each":cart.Items}}}
+	err = collection.Update(match,change)
+	//_,err = collection.UpsertId(cart.IDCart, cart)
 	if err != nil {
 		return err
 	}
+}
 	return nil
 }
+
 
 func Remove(item string, qty int64, idcart int64) error {
 	var session, err = configs.ConnectMO()
