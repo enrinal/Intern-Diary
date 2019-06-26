@@ -2,6 +2,7 @@ package repository
 
 import (
 	"fmt"
+
 	configs "gitlab.warungpintar.co/enrinal/intern-diary/simple-order/config"
 	"gitlab.warungpintar.co/enrinal/intern-diary/simple-order/models"
 	"gopkg.in/mgo.v2/bson"
@@ -15,8 +16,8 @@ func FindByCustomerId(idcust int64) ([]models.Cart, error) {
 	defer session.Close()
 	var collection = session.DB("simpleorder").C("cart")
 	var result = []models.Cart{}
-	var selector = bson.M{"idcust": 2}
-	err = collection.Find(selector).All(&result)
+	var selector = bson.M{"idcust": idcust}
+	err = collection.Find(nil).Select(selector).All(&result)
 	if err != nil {
 		return nil, err
 	}
@@ -33,23 +34,22 @@ func Add(cart models.Cart) error {
 	var collection = session.DB("simpleorder").C("cart")
 	err = collection.Find(bson.M{"idcart": cart.IDCart}).One(&cartuser)
 	fmt.Println(cartuser)
-	if err != nil{
-		_,err = collection.UpsertId(cart.IDCart, cart)
+	if err != nil {
+		_, err = collection.UpsertId(cart.IDCart, cart)
 		if err != nil {
 			return err
 		}
-	}else{
-	match := bson.M{"idcart" : cart.IDCart}
-	change := bson.M{"$push":bson.M{"item":bson.M{"$each":cart.Items}}}
-	err = collection.Update(match,change)
-	//_,err = collection.UpsertId(cart.IDCart, cart)
-	if err != nil {
-		return err
+	} else {
+		match := bson.M{"idcart": cart.IDCart}
+		change := bson.M{"$push": bson.M{"item": bson.M{"$each": cart.Items}}}
+		err = collection.Update(match, change)
+		//_,err = collection.UpsertId(cart.IDCart, cart)
+		if err != nil {
+			return err
+		}
 	}
-}
 	return nil
 }
-
 
 func Remove(item string, qty int64, idcart int64) error {
 	var session, err = configs.ConnectMO()
@@ -83,8 +83,8 @@ func insert() error { //Testing aja untuk buat attribut baru
 	return nil
 }
 
-func main(){
+func main() {
 	cart := models.Cart{IDCart: 1000, IDCust: 2, Items: []models.Item{models.Item{Id: int64(1), Name: "mobil"},
-	models.Item{Id: int64(1), Name: "mobil"}}}
+		models.Item{Id: int64(1), Name: "mobil"}}}
 	Add(cart)
 }
