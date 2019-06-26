@@ -43,7 +43,6 @@ func Add(cart models.Cart) error {
 		match := bson.M{"idcart": cart.IDCart}
 		change := bson.M{"$push": bson.M{"item": bson.M{"$each": cart.Items}}}
 		err = collection.Update(match, change)
-		//_,err = collection.UpsertId(cart.IDCart, cart)
 		if err != nil {
 			return err
 		}
@@ -51,7 +50,8 @@ func Add(cart models.Cart) error {
 	return nil
 }
 
-func Remove(item string, qty int64, idcart int64) error {
+func Remove(cart models.Cart) error {
+	//Connection Begin
 	var session, err = configs.ConnectMO()
 	if err != nil {
 		return err
@@ -59,32 +59,19 @@ func Remove(item string, qty int64, idcart int64) error {
 	defer session.Close()
 	var collection = session.DB("simpleorder").C("cart")
 
-	var selector = bson.M{"idcart": idcart}
-	err = collection.Remove(selector)
+	//Remove cart when item is 0
+	if len(cart.Items) == 0 {
+		err = collection.Remove(bson.M{"_id": cart.IDCart})
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+
+	//Update cart when item change
+	err = collection.Update(bson.M{"_id": cart.IDCart}, cart)
 	if err != nil {
 		return err
 	}
 	return nil
-}
-
-func insert() error { //Testing aja untuk buat attribut baru
-	var session, err = configs.ConnectMO()
-	if err != nil {
-		return err
-	}
-	defer session.Close()
-
-	var collection = session.DB("simpleorder").C("cart")
-	err = collection.Insert(&models.Cart{IDCart: 1, IDCust: 2, Items: []models.Item{models.Item{Id: int64(1), Name: "mobil"},
-		models.Item{Id: int64(1), Name: "mobil"}}})
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func main() {
-	cart := models.Cart{IDCart: 1000, IDCust: 2, Items: []models.Item{models.Item{Id: int64(1), Name: "mobil"},
-		models.Item{Id: int64(1), Name: "mobil"}}}
-	Add(cart)
 }
