@@ -10,13 +10,13 @@ type Usecase struct {
 	mock.Mock
 }
 
-// AddItem provides a mock function with given fields: item, qty
-func (_m *Usecase) AddItem(item models.Item, qty int64) error {
-	ret := _m.Called(item, qty)
+// AddItem provides a mock function with given fields: _a0
+func (_m *Usecase) AddItem(_a0 models.Cart) error {
+	ret := _m.Called(_a0)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(models.Item, int64) error); ok {
-		r0 = rf(item, qty)
+	if rf, ok := ret.Get(0).(func(models.Cart) error); ok {
+		r0 = rf(_a0)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -25,15 +25,15 @@ func (_m *Usecase) AddItem(item models.Item, qty int64) error {
 }
 
 // GetCustCart provides a mock function with given fields: custid
-func (_m *Usecase) GetCustCart(custid int64) ([]*models.Cart, error) {
+func (_m *Usecase) GetCustCart(custid int64) ([]models.Cart, error) {
 	ret := _m.Called(custid)
 
-	var r0 []*models.Cart
-	if rf, ok := ret.Get(0).(func(int64) []*models.Cart); ok {
+	var r0 []models.Cart
+	if rf, ok := ret.Get(0).(func(int64) []models.Cart); ok {
 		r0 = rf(custid)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]*models.Cart)
+			r0 = ret.Get(0).([]models.Cart)
 		}
 	}
 
@@ -47,13 +47,13 @@ func (_m *Usecase) GetCustCart(custid int64) ([]*models.Cart, error) {
 	return r0, r1
 }
 
-// RemoveItem provides a mock function with given fields: item
-func (_m *Usecase) RemoveItem(item string) error {
-	ret := _m.Called(item)
+// RemoveItem provides a mock function with given fields: _a0
+func (_m *Usecase) RemoveItem(_a0 models.Cart) error {
+	ret := _m.Called(_a0)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(string) error); ok {
-		r0 = rf(item)
+	if rf, ok := ret.Get(0).(func(models.Cart) error); ok {
+		r0 = rf(_a0)
 	} else {
 		r0 = ret.Error(0)
 	}

@@ -24,22 +24,22 @@ func (_m *Repository) Add(_a0 models.Cart) error {
 	return r0
 }
 
-// FindByCustomerId provides a mock function with given fields: custid
-func (_m *Repository) FindByCustomerId(custid int64) ([]*models.Cart, error) {
-	ret := _m.Called(custid)
+// FindByCustomerId provides a mock function with given fields: idcust
+func (_m *Repository) FindByCustomerId(idcust int64) ([]models.Cart, error) {
+	ret := _m.Called(idcust)
 
-	var r0 []*models.Cart
-	if rf, ok := ret.Get(0).(func(int64) []*models.Cart); ok {
-		r0 = rf(custid)
+	var r0 []models.Cart
+	if rf, ok := ret.Get(0).(func(int64) []models.Cart); ok {
+		r0 = rf(idcust)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]*models.Cart)
+			r0 = ret.Get(0).([]models.Cart)
 		}
 	}
 
 	var r1 error
 	if rf, ok := ret.Get(1).(func(int64) error); ok {
-		r1 = rf(custid)
+		r1 = rf(idcust)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -47,13 +47,13 @@ func (_m *Repository) FindByCustomerId(custid int64) ([]*models.Cart, error) {
 	return r0, r1
 }
 
-// Remove provides a mock function with given fields: item, qty, idcart
-func (_m *Repository) Remove(item string, qty int64, idcart int64) error {
-	ret := _m.Called(item, qty, idcart)
+// Remove provides a mock function with given fields: _a0
+func (_m *Repository) Remove(_a0 models.Cart) error {
+	ret := _m.Called(_a0)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(string, int64, int64) error); ok {
-		r0 = rf(item, qty, idcart)
+	if rf, ok := ret.Get(0).(func(models.Cart) error); ok {
+		r0 = rf(_a0)
 	} else {
 		r0 = ret.Error(0)
 	}

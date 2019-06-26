@@ -15,23 +15,23 @@ func NewCartUsecase(cart cart.Repository) CartUsecase {
 	}
 }
 
-func (c *CartUsecase) GetCustCart(custid int64) ([]*models.Cart, error) {
+func (c *CartUsecase) GetCustCart(custid int64) ([]models.Cart, error) {
 	listcart, err := c.cart.FindByCustomerId(custid)
 	if err != nil {
 		return nil, err
 	}
 	return listcart, nil
 }
-func (c *CartUsecase) AddItem(item models.Item, qty int64, idcart int64) error {
-	err := c.cart.Add(item.Name, qty, idcart)
+func (c *CartUsecase) AddItem(cart models.Cart) error {
+	err := c.cart.Add(cart)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (c *CartUsecase) RemoveItem(item models.Item, qty int64, idcart int64) error {
-	err := c.cart.Remove(item.Name, qty, idcart)
+func (c *CartUsecase) RemoveItem(cart models.Cart) error {
+	err := c.cart.Remove(cart)
 	if err != nil {
 		return err
 	}
