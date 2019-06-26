@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	configs "gitlab.warungpintar.co/enrinal/intern-diary/simple-order/config"
 	"gitlab.warungpintar.co/enrinal/intern-diary/simple-order/models"
 	"gopkg.in/mgo.v2/bson"
@@ -31,6 +32,7 @@ func Add(cart models.Cart) error {
 	cartuser := models.Cart{}
 	var collection = session.DB("simpleorder").C("cart")
 	err = collection.Find(bson.M{"idcart": cart.IDCart}).One(&cartuser)
+	fmt.Println(cartuser)
 	if err != nil{
 		_,err = collection.UpsertId(cart.IDCart, cart)
 		if err != nil {
@@ -79,4 +81,10 @@ func insert() error { //Testing aja untuk buat attribut baru
 		return err
 	}
 	return nil
+}
+
+func main(){
+	cart := models.Cart{IDCart: 1000, IDCust: 2, Items: []models.Item{models.Item{Id: int64(1), Name: "mobil"},
+	models.Item{Id: int64(1), Name: "mobil"}}}
+	Add(cart)
 }
