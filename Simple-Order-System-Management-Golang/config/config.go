@@ -6,18 +6,16 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/spf13/viper"
+	"gopkg.in/mgo.v2"
 )
 
-func init() {
+func ConnectDB() (*sql.DB, error) {
 	viper.SetConfigFile("config.json")
 	err := viper.ReadInConfig()
 
 	if err != nil {
 		panic(err)
 	}
-}
-
-func ConnectDB() (*sql.DB, error) {
 	dbHost := viper.GetString(`database.host`)
 	dbPort := viper.GetString(`database.port`)
 	dbUser := viper.GetString(`database.user`)
@@ -30,4 +28,12 @@ func ConnectDB() (*sql.DB, error) {
 	}
 
 	return db, nil
+}
+
+func ConnectMO() (*mgo.Session, error) {
+	var session, err = mgo.Dial("localhost")
+	if err != nil {
+		return nil, err
+	}
+	return session, nil
 }
