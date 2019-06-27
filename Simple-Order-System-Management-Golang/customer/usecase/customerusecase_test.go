@@ -32,10 +32,10 @@ func TestGetAllCustomer(t *testing.T) {
 
 func TestGetCustomerById(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
-		customermocks := &mocks.Usecase{}
-		customermocks.On("GetById", int64(2)).Return(&models.Customer{ID: 2, Name: "Muhamad Enrinal", Status: 1}, nil)
+		customermocks := &mocks.Repository{}
+		customermocks.On("GetCustomerById", int64(2)).Return(&models.Customer{ID: 2, Name: "Muhamad Enrinal", Status: 1}, nil)
 		customer := NewCustomerUsecase(customermocks)
-		c := customer.GetCustomerById(int64(2))
+		c, _ := customer.GetCustomerById(int64(2))
 
 		if c == nil {
 			t.Errorf("Error not found id")

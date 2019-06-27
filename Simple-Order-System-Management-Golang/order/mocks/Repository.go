@@ -120,17 +120,3 @@ func (_m *Repository) GetOrderById(ID int64) (*models.Order, error) {
 
 	return r0, r1
 }
-
-// GetOrderStatus provides a mock function with given fields: ID
-func (_m *Repository) GetOrderStatus(ID int64) string {
-	ret := _m.Called(ID)
-
-	var r0 string
-	if rf, ok := ret.Get(0).(func(int64) string); ok {
-		r0 = rf(ID)
-	} else {
-		r0 = ret.Get(0).(string)
-	}
-
-	return r0
-}

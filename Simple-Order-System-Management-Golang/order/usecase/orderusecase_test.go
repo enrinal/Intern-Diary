@@ -169,7 +169,7 @@ func TestCheckLimitOrder(t *testing.T) {
 			&models.Order{IDCust: 1, Item: "Mobil"},
 		}, nil)
 		customermocks := &customers.Usecase{}
-		customermocks.On("GetById", int64(1)).Return(&models.Customer{ID: 1, Name: "Name", Status: 2}, nil)
+		customermocks.On("GetCustomerById", int64(1)).Return(&models.Customer{ID: 1, Name: "Name", Status: 2}, nil)
 		Order := NewOrderUsecase(Ordermocks, customermocks)
 		c := Order.CheckLimitOrder(1)
 		if c != true {
@@ -191,7 +191,7 @@ func TestCheckLimitOrder(t *testing.T) {
 			&models.Order{IDCust: 1, Item: "Mobil"},
 		}, nil)
 		customermocks := &customers.Usecase{}
-		customermocks.On("GetById", int64(1)).Return(&models.Customer{ID: 1, Name: "Name", Status: 1}, nil)
+		customermocks.On("GetCustomerById", int64(1)).Return(&models.Customer{ID: 1, Name: "Name", Status: 1}, nil)
 		Order := NewOrderUsecase(Ordermocks, customermocks)
 		c := Order.CheckLimitOrder(1)
 		if c != false {
