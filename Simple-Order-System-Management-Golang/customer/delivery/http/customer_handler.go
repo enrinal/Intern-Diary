@@ -24,6 +24,7 @@ func NewCustomerHandler(e *echo.Echo, cust customer.Usecase) {
 		CustUsecase: cust,
 	}
 	e.GET("/customers", handler.FetchCustomer)
+	e.GET("/customers/:id", handler.FetchCustomerByID)
 }
 
 func (cust *CustomerHandler) FetchCustomer(c echo.Context) error {
@@ -39,6 +40,26 @@ func (cust *CustomerHandler) FetchCustomer(c echo.Context) error {
 		return c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
 	}
 	return c.JSON(http.StatusOK, listcusts)
+}
+
+func (cust *CustomerHandler) FetchCustomerByID(c echo.Context) error {
+	idCust, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return err
+	}
+
+	id := int64(idCust)
+	ctx := c.Request().Context()
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	customer, err := cust.CustUsecase.GetCustomerByID(ctx, id)
+	if err != nil {
+		return c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
+	}
+	return c.JSON(http.StatusOK, customer)
+
 }
 
 func getStatusCode(err error) int {
