@@ -1,9 +1,11 @@
 package repository
 
 import (
+	"context"
 	"database/sql"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/sirupsen/logrus"
 	"gitlab.warungpintar.co/enrinal/intern-diary/simple-order/customer"
 	"gitlab.warungpintar.co/enrinal/intern-diary/simple-order/models"
 )
@@ -17,59 +19,58 @@ func NewMysqlCustomerRepository(Conn *sql.DB) customer.Repository {
 	return &mysqlCustomerRepository{Conn}
 }
 
-func (m *mysqlCustomerRepository) Fetch() ([]*models.Customer, error) {
-	rows, err := m.query("SELECT id, name, status FROM customer")
+func (m *mysqlCustomerRepository) fetch(ctx context.Context, query string, args ...interface{}) ([]*models.Customer, error) {
+	rows, err := m.Conn.QueryContext(ctx, query, args...)
 	if err != nil {
+		logrus.Error(err)
 		return nil, err
 	}
-	defer rows.Close()
 
-	listcustomer := make([]*models.Customer, 0)
-	for rows.Next() {
-		customer := &models.Customer{}
-		err = rows.Scan(&customer.ID, &customer.Name, &customer.Status)
+	defer func() {
+		err := rows.Close()
 		if err != nil {
+			logrus.Error(err)
+		}
+	}()
+
+	result := make([]*models.Customer, 0)
+	for rows.Next() {
+		customer := new(models.Customer)
+		err = rows.Scan(
+			&customer.ID,
+			&customer.Name,
+			&customer.Status,
+		)
+		if err != nil {
+			logrus.Error(err)
 			return nil, err
 		}
-		listcustomer = append(listcustomer, customer)
+		result = append(result, customer)
 	}
-	return listcustomer, nil
+	return result, nil
 }
 
-func (m *mysqlCustomerRepository) GetCustomerById(ID int64) (*models.Customer, error) {
-	row, err := m.queryRow("SELECT id, name, status FROM customer WHERE id=$1", ID)
+func (m *mysqlCustomerRepository) Fetch(ctx context.Context, num int64) ([]*models.Customer, error) {
+	query := `SELECT id, name, status FROM customer LIMIT ?`
+
+	listcustomer, err := m.fetch(ctx, query, num)
 	if err != nil {
 		return nil, err
 	}
-
-	customer := &models.Customer{}
-
-	err = row.Scan(&customer.ID, &customer.Name, &customer.Status)
-	if err != nil {
-		return nil, err
-	}
-	return customer, nil
-
+	return listcustomer, err
 }
 
-// query to get multiple row
-func (m *mysqlCustomerRepository) query(q string, args ...interface{}) (*sql.Rows, error) {
-	stmt, err := m.Conn.Prepare(q)
+func (m *mysqlCustomerRepository) GetCustomerById(ctx context.Context, ID int64) (result *models.Customer, err error) {
+	query := `SELECT id, name, status FROM customer WHERE id=?`
+	customer, err := m.fetch(ctx, query, ID)
+
 	if err != nil {
 		return nil, err
 	}
-	defer stmt.Close()
-
-	return stmt.Query(args...)
-}
-
-// queryRow to get one row
-func (m *mysqlCustomerRepository) queryRow(q string, args ...interface{}) (*sql.Row, error) {
-	stmt, err := m.Conn.Prepare(q)
-	if err != nil {
-		return nil, err
+	if len(customer) > 0 {
+		result = customer[0]
+	} else {
+		return nil, models.ErrNotFound
 	}
-	defer stmt.Close()
-
-	return stmt.QueryRow(args...), nil
+	return
 }
