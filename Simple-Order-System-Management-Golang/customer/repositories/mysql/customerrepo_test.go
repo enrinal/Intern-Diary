@@ -14,9 +14,7 @@ func TestFetch(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	defer func() {
-		err = db.Close()
-	}()
+	defer db.Close()
 
 	mockCustomer := []models.Customer{
 		models.Customer{
@@ -47,9 +45,7 @@ func TestGetByID(t *testing.T) {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
 
-	defer func() {
-		err = db.Close()
-	}()
+	defer db.Close()
 
 	rows := sqlmock.NewRows([]string{"id", "name", "status"}).
 		AddRow(1, "Muhamad Enrinal Zulhimar", 1)
