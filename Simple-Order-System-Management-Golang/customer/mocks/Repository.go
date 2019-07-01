@@ -2,6 +2,8 @@
 
 package mocks
 
+import context "context"
+
 import mock "github.com/stretchr/testify/mock"
 import models "gitlab.warungpintar.co/enrinal/intern-diary/simple-order/models"
 
@@ -10,13 +12,13 @@ type Repository struct {
 	mock.Mock
 }
 
-// Fetch provides a mock function with given fields:
-func (_m *Repository) Fetch() ([]*models.Customer, error) {
-	ret := _m.Called()
+// Fetch provides a mock function with given fields: ctx, num
+func (_m *Repository) Fetch(ctx context.Context, num int64) ([]*models.Customer, error) {
+	ret := _m.Called(ctx, num)
 
 	var r0 []*models.Customer
-	if rf, ok := ret.Get(0).(func() []*models.Customer); ok {
-		r0 = rf()
+	if rf, ok := ret.Get(0).(func(context.Context, int64) []*models.Customer); ok {
+		r0 = rf(ctx, num)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]*models.Customer)
@@ -24,8 +26,8 @@ func (_m *Repository) Fetch() ([]*models.Customer, error) {
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func() error); ok {
-		r1 = rf()
+	if rf, ok := ret.Get(1).(func(context.Context, int64) error); ok {
+		r1 = rf(ctx, num)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -33,13 +35,13 @@ func (_m *Repository) Fetch() ([]*models.Customer, error) {
 	return r0, r1
 }
 
-// GetCustomerById provides a mock function with given fields: id
-func (_m *Repository) GetCustomerById(id int64) (*models.Customer, error) {
-	ret := _m.Called(id)
+// GetCustomerById provides a mock function with given fields: ctx, id
+func (_m *Repository) GetCustomerById(ctx context.Context, id int64) (*models.Customer, error) {
+	ret := _m.Called(ctx, id)
 
 	var r0 *models.Customer
-	if rf, ok := ret.Get(0).(func(int64) *models.Customer); ok {
-		r0 = rf(id)
+	if rf, ok := ret.Get(0).(func(context.Context, int64) *models.Customer); ok {
+		r0 = rf(ctx, id)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*models.Customer)
@@ -47,8 +49,8 @@ func (_m *Repository) GetCustomerById(id int64) (*models.Customer, error) {
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(int64) error); ok {
-		r1 = rf(id)
+	if rf, ok := ret.Get(1).(func(context.Context, int64) error); ok {
+		r1 = rf(ctx, id)
 	} else {
 		r1 = ret.Error(1)
 	}
