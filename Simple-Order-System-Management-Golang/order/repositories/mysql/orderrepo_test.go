@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"testing"
 
 	sqlmock "github.com/DATA-DOG/go-sqlmock"
@@ -19,13 +20,11 @@ func TestGetAllOrder(t *testing.T) {
 		AddRow(1, "1", "mobil", 1).
 		AddRow(2, "2", "rumah", 2)
 
-	mock.ExpectPrepare("SELECT id, idcust, item, status FROM order").
-		ExpectQuery().
-		WillReturnRows(rows)
-
+	query := "SELECT id, idcust, item, status FROM order LIMIT \\?"
+	mock.ExpectQuery(query).WillReturnRows(rows)
 	or := NewMysqlOrderRepository(db)
-	var orders []*models.Order
-	orders, err = or.GetAllOrder()
+	num := int64(2)
+	orders, err := or.GetAllOrder(context.TODO(), num)
 
 	assert.NoError(t, err)
 	assert.NotNil(t, orders)

@@ -1,11 +1,13 @@
 package order
 
 import (
+	"context"
+
 	"gitlab.warungpintar.co/enrinal/intern-diary/simple-order/models"
 )
 
 type Repository interface {
-	GetAllOrder() ([]*models.Order, error)
+	GetAllOrder(ctx context.Context, num int64) ([]*models.Order, error)
 	GetAllOrderById(ID int64) ([]*models.Order, error)
 	GetOrderById(ID int64) (*models.Order, error)
 	ChangeOrderSend(ID int64) error

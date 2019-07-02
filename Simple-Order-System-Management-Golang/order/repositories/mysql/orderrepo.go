@@ -51,23 +51,13 @@ func (m *mysqlOrderRepository) fetch(ctx context.Context, query string, args ...
 	return result, nil
 }
 
-func (m *mysqlOrderRepository) GetAllOrder() ([]*models.Order, error) {
-	rows, err := m.query("SELECT id, idcust, item, status FROM order")
+func (m *mysqlOrderRepository) GetAllOrder(ctx context.Context, num int64) ([]*models.Order, error) {
+	query := `SELECT id, idcust, item, status FROM order LIMIT ?`
+	listorder, err := m.fetch(ctx, query, num)
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
-
-	listoder := make([]*models.Order, 0)
-	for rows.Next() {
-		order := &models.Order{}
-		err = rows.Scan(&order.ID, &order.IDCust, &order.Item, &order.Status)
-		if err != nil {
-			return nil, err
-		}
-		listoder = append(listoder, order)
-	}
-	return listoder, nil
+	return listorder, nil
 }
 
 func (m *mysqlOrderRepository) GetOrderById(ID int64) (*models.Order, error) {
