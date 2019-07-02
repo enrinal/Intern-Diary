@@ -74,21 +74,11 @@ func (m *mysqlOrderRepository) GetOrderById(ctx context.Context, ID int64) (resu
 	return
 }
 
-func (m *mysqlOrderRepository) GetAllOrderById(ID int64) ([]*models.Order, error) {
-	rows, err := m.query("SELECT id, idcust, item, status FROM order WHERE idcust=$1", ID)
+func (m *mysqlOrderRepository) GetAllOrderById(ctx context.Context, ID int64) ([]*models.Order, error) {
+	query := `SELECT id, idcust, item, status FROM order WHERE idcust=?`
+	listoder, err := m.fetch(ctx, query, ID)
 	if err != nil {
 		return nil, err
-	}
-	defer rows.Close()
-
-	listoder := make([]*models.Order, 0)
-	for rows.Next() {
-		order := &models.Order{}
-		err = rows.Scan(&order.ID, &order.IDCust, &order.Item, &order.Status)
-		if err != nil {
-			return nil, err
-		}
-		listoder = append(listoder, order)
 	}
 	return listoder, nil
 }

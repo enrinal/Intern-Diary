@@ -6,7 +6,6 @@ import (
 
 	sqlmock "github.com/DATA-DOG/go-sqlmock"
 	"github.com/stretchr/testify/assert"
-	"gitlab.warungpintar.co/enrinal/intern-diary/simple-order/models"
 )
 
 func TestGetAllOrder(t *testing.T) {
@@ -66,15 +65,10 @@ func TestGetAllOrderById(t *testing.T) {
 		AddRow(2, "1", "rumah", 2)
 
 	custId := int64(1)
-	mock.ExpectPrepare("SELECT id, idcust, item, status FROM order WHERE idcust=\\$1").
-		ExpectQuery().
-		WithArgs(custId).
-		WillReturnRows(rows)
-
+	query := "SELECT id, idcust, item, status FROM order WHERE idcust=\\?"
+	mock.ExpectQuery(query).WillReturnRows(rows)
 	or := NewMysqlOrderRepository(db)
-	var orders []*models.Order
-	orders, err = or.GetAllOrderById(custId)
-
+	orders, err := or.GetAllOrderById(context.TODO(), custId)
 	assert.NoError(t, err)
 	assert.NotNil(t, orders)
 	assert.Len(t, orders, 2)
