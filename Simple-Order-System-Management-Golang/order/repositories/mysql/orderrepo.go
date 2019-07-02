@@ -60,18 +60,18 @@ func (m *mysqlOrderRepository) GetAllOrder(ctx context.Context, num int64) ([]*m
 	return listorder, nil
 }
 
-func (m *mysqlOrderRepository) GetOrderById(ID int64) (*models.Order, error) {
-	row, err := m.queryRow("SELECT id, idcust, item, status FROM order WHERE id=$1", ID)
+func (m *mysqlOrderRepository) GetOrderById(ctx context.Context, ID int64) (result *models.Order, err error) {
+	query := `SELECT id, idcust, item, status FROM order WHERE id=?`
+	order, err := m.fetch(ctx, query, ID)
 	if err != nil {
 		return nil, err
 	}
-	order := &models.Order{}
-
-	err = row.Scan(&order.ID, &order.IDCust, &order.Item, &order.Status)
-	if err != nil {
-		return nil, err
+	if len(order) > 0 {
+		result = order[0]
+	} else {
+		return nil, models.ErrNotFound
 	}
-	return order, nil
+	return
 }
 
 func (m *mysqlOrderRepository) GetAllOrderById(ID int64) ([]*models.Order, error) {

@@ -42,15 +42,10 @@ func TestGetOrderById(t *testing.T) {
 		AddRow(1, "1", "mobil", 1)
 
 	orderId := int64(1)
-	mock.ExpectPrepare("SELECT id, idcust, item, status FROM order WHERE id=\\$1").
-		ExpectQuery().
-		WithArgs(orderId).
-		WillReturnRows(rows)
-
+	query := "SELECT id, idcust, item, status FROM order WHERE idcust=\\?"
+	mock.ExpectQuery(query).WillReturnRows(rows)
 	or := NewMysqlOrderRepository(db)
-	var order *models.Order
-	order, err = or.GetOrderById(orderId)
-
+	order, err := or.GetOrderById(context.TODO(), orderId)
 	assert.NoError(t, err)
 	assert.Equal(t, int64(orderId), order.ID)
 	assert.Equal(t, int64(1), order.IDCust)
