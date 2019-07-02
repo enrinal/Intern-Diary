@@ -131,33 +131,26 @@ func (m *mysqlOrderRepository) ChangeOrderProcess(ctx context.Context, ID int64)
 	}
 	return nil
 }
-func (m *mysqlOrderRepository) ChangeOrderDelivered(ID int64) error {
-	rows, err := m.query("UPDATE order SET status=$1 WHERE id=$2", Delivered, ID)
+func (m *mysqlOrderRepository) ChangeOrderDelivered(ctx context.Context, ID int64) error {
+	query := `UPDATE order SET status=? WHERE id=?`
+	//PrepareContext creates a prepared statement for later queries or executions.
+	rows, err := m.Conn.PrepareContext(ctx, query)
 	if err != nil {
 		return err
 	}
-	defer rows.Close()
-	return err
-}
-
-// query to get multiple row
-func (m *mysqlOrderRepository) query(q string, args ...interface{}) (*sql.Rows, error) {
-	stmt, err := m.Conn.Prepare(q)
+	//ExecContext executes a query without returning any rows.
+	result, err := rows.ExecContext(ctx, Delivered, ID)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	defer stmt.Close()
-
-	return stmt.Query(args...)
-}
-
-// queryRow to get one row
-func (m *mysqlOrderRepository) queryRow(q string, args ...interface{}) (*sql.Row, error) {
-	stmt, err := m.Conn.Prepare(q)
+	//RowsAffected returns the number of rows affected by an update, insert, or delete.
+	affect, err := result.RowsAffected()
 	if err != nil {
-		return nil, err
+		return err
 	}
-	defer stmt.Close()
-
-	return stmt.QueryRow(args...), nil
+	if affect != 1 {
+		err = fmt.Errorf("Weird  Behaviour. Total Affected: %d", affect)
+		return err
+	}
+	return nil
 }
