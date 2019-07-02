@@ -80,17 +80,12 @@ func TestChangeOrderSend(t *testing.T) {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
 	defer db.Close()
-	rows := sqlmock.NewRows([]string{"id", "idcust", "item", "status"}).
-		AddRow(1, "1", "mobil", 2)
-
 	custId := int64(1)
+	query := "UPDATE order SET status=\\? WHERE id=\\?"
+	prep := mock.ExpectPrepare(query)
+	prep.ExpectExec().WithArgs(Send, custId).WillReturnResult(sqlmock.NewResult(1, 1))
 	or := NewMysqlOrderRepository(db)
-	mock.ExpectPrepare("UPDATE order SET status=\\$1 WHERE id=\\$2").
-		ExpectQuery().
-		WithArgs(Send, custId).
-		WillReturnRows(rows)
-
-	err = or.ChangeOrderSend(int64(1))
+	err = or.ChangeOrderSend(context.TODO(), custId)
 
 	assert.NoError(t, err)
 }
