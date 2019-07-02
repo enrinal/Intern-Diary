@@ -1,9 +1,11 @@
 package repository
 
 import (
+	"context"
 	"database/sql"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/sirupsen/logrus"
 	"gitlab.warungpintar.co/enrinal/intern-diary/simple-order/models"
 	"gitlab.warungpintar.co/enrinal/intern-diary/simple-order/order"
 )
@@ -21,6 +23,32 @@ const (
 
 func NewMysqlOrderRepository(Conn *sql.DB) order.Repository {
 	return &mysqlOrderRepository{Conn}
+}
+
+func (m *mysqlOrderRepository) fetch(ctx context.Context, query string, args ...interface{}) ([]*models.Order, error) {
+	rows, err := m.Conn.QueryContext(ctx, query, args...)
+	if err != nil {
+		logrus.Error(err)
+		return nil, err
+	}
+
+	defer func() {
+		err := rows.Close()
+		if err != nil {
+			logrus.Error(err)
+		}
+	}()
+
+	result := make([]*models.Order, 0)
+	for rows.Next() {
+		order := &models.Order{}
+		err = rows.Scan(&order.ID, &order.IDCust, &order.Item, &order.Status)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, order)
+	}
+	return result, nil
 }
 
 func (m *mysqlOrderRepository) GetAllOrder() ([]*models.Order, error) {
