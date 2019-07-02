@@ -108,13 +108,28 @@ func (m *mysqlOrderRepository) ChangeOrderSend(ctx context.Context, ID int64) er
 	return nil
 }
 
-func (m *mysqlOrderRepository) ChangeOrderProcess(ID int64) error {
-	rows, err := m.query("UPDATE order SET status=$1 WHERE id=$2", Process, ID)
+func (m *mysqlOrderRepository) ChangeOrderProcess(ctx context.Context, ID int64) error {
+	query := `UPDATE order SET status=? WHERE id=?`
+	//PrepareContext creates a prepared statement for later queries or executions.
+	rows, err := m.Conn.PrepareContext(ctx, query)
 	if err != nil {
 		return err
 	}
-	defer rows.Close()
-	return err
+	//ExecContext executes a query without returning any rows.
+	result, err := rows.ExecContext(ctx, Process, ID)
+	if err != nil {
+		return err
+	}
+	//RowsAffected returns the number of rows affected by an update, insert, or delete.
+	affect, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if affect != 1 {
+		err = fmt.Errorf("Weird  Behaviour. Total Affected: %d", affect)
+		return err
+	}
+	return nil
 }
 func (m *mysqlOrderRepository) ChangeOrderDelivered(ID int64) error {
 	rows, err := m.query("UPDATE order SET status=$1 WHERE id=$2", Delivered, ID)

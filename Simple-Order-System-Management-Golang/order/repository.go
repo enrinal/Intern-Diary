@@ -11,6 +11,6 @@ type Repository interface {
 	GetAllOrderById(ctx context.Context, ID int64) ([]*models.Order, error)
 	GetOrderById(ctx context.Context, ID int64) (*models.Order, error)
 	ChangeOrderSend(ctx context.Context, ID int64) error
-	ChangeOrderProcess(ID int64) error
+	ChangeOrderProcess(ctx context.Context, ID int64) error
 	ChangeOrderDelivered(ID int64) error
 }
