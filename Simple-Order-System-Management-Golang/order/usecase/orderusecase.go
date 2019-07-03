@@ -1,6 +1,9 @@
 package usecase
 
 import (
+	"context"
+	"time"
+
 	"gitlab.warungpintar.co/enrinal/intern-diary/simple-order/customer"
 	"gitlab.warungpintar.co/enrinal/intern-diary/simple-order/models"
 	"gitlab.warungpintar.co/enrinal/intern-diary/simple-order/order"
@@ -19,69 +22,105 @@ const (
 )
 
 type OrderUsecase struct {
-	orders   order.Repository
-	customer customer.Repository
+	orders         order.Repository
+	customer       customer.Repository
+	contextTimeout time.Duration
 }
 
-func NewOrderUsecase(orders order.Repository, customer customer.Repository) OrderUsecase {
+func NewOrderUsecase(orders order.Repository, customer customer.Repository, timeout time.Duration) OrderUsecase {
 	return OrderUsecase{
-		orders:   orders,
-		customer: customer,
+		orders:         orders,
+		customer:       customer,
+		contextTimeout: timeout,
 	}
 }
 
-func (o *OrderUsecase) GetAllOrder() []*models.Order {
-	listorder, _ := o.orders.GetAllOrder()
-	return listorder
-}
-
-func (o *OrderUsecase) GetOrderById(ID int64) *models.Order {
-	order, _ := o.orders.GetOrderById(ID)
-	return order
-}
-
-func (o *OrderUsecase) ChangeOrderProcess(ID int64) string {
-	order, _ := o.orders.GetOrderById(ID)
-	if order.Status == Pending {
-		order.Status = Process
-		return "Order Process"
+func (o *OrderUsecase) GetAllOrder(c context.Context, num int64) ([]*models.Order, error) {
+	ctx, cancel := context.WithTimeout(c, o.contextTimeout)
+	defer cancel()
+	listorder, err := o.orders.GetAllOrder(ctx, num)
+	if err != nil {
+		return nil, err
 	}
-	return "Error Change Status to Process"
+	return listorder, nil
 }
 
-func (o *OrderUsecase) ChangeOrderSend(ID int64) string {
-	order, _ := o.orders.GetOrderById(ID)
-	if order.Status == Process {
-		order.Status = Send
-		return "Order Send"
+func (o *OrderUsecase) GetOrderById(c context.Context, ID int64) (*models.Order, error) {
+	ctx, cancel := context.WithTimeout(c, o.contextTimeout)
+	defer cancel()
+	order, err := o.orders.GetOrderById(ctx, ID)
+	if err != nil {
+		return nil, err
 	}
-	return "Error Change Status to Send"
+	return order, nil
 }
 
-func (o *OrderUsecase) ChangeOrderDelivered(ID int64) string {
-	order, _ := o.orders.GetOrderById(ID)
-	if order.Status == Send {
-		order.Status = Delivered
-		return "Order Delivered"
+func (o *OrderUsecase) ChangeOrderProcess(c context.Context, ID int64) error {
+	ctx, cancel := context.WithTimeout(c, o.contextTimeout)
+	defer cancel()
+	order, err := o.orders.GetOrderById(ctx, ID)
+	if err != nil {
+		return err
 	}
-	return "Error Change Status to Delivered"
+	order.Status = Process
+	return nil
 }
 
-func (o *OrderUsecase) GetAllOrderById(ID int64) []*models.Order {
-	listorder, _ := o.orders.GetAllOrderById(ID)
-	return listorder
+func (o *OrderUsecase) ChangeOrderSend(c context.Context, ID int64) error {
+	ctx, cancel := context.WithTimeout(c, o.contextTimeout)
+	defer cancel()
+	order, err := o.orders.GetOrderById(ctx, ID)
+	if err != nil {
+		return err
+	}
+	order.Status = Send
+	return nil
 }
 
-func (o *OrderUsecase) CountOrderCust(ID int64) int {
-	listorder, _ := o.orders.GetAllOrderById(ID)
-	return len(listorder)
+func (o *OrderUsecase) ChangeOrderDelivered(c context.Context, ID int64) error {
+	ctx, cancel := context.WithTimeout(c, o.contextTimeout)
+	defer cancel()
+	order, err := o.orders.GetOrderById(ctx, ID)
+	if err != nil {
+		return err
+	}
+	order.Status = Delivered
+	return nil
 }
 
-func (o *OrderUsecase) CheckLimitOrder(ID int64) bool {
-	customer, _ := o.customer.GetCustomerById(ID)
-	order, _ := o.orders.GetAllOrderById(ID)
+func (o *OrderUsecase) GetAllOrderById(c context.Context, ID int64) ([]*models.Order, error) {
+	ctx, cancel := context.WithTimeout(c, o.contextTimeout)
+	defer cancel()
+	listorder, err := o.orders.GetAllOrderById(ctx, ID)
+	if err != nil {
+		return nil, err
+	}
+	return listorder, nil
+}
+
+func (o *OrderUsecase) CountOrderCust(c context.Context, ID int64) (int, error) {
+	ctx, cancel := context.WithTimeout(c, o.contextTimeout)
+	defer cancel()
+	listorder, err := o.orders.GetAllOrderById(ctx, ID)
+	if err != nil {
+		return 0, err
+	}
+	return len(listorder), nil
+}
+
+func (o *OrderUsecase) CheckLimitOrder(c context.Context, ID int64) (bool, error) {
+	ctx, cancel := context.WithTimeout(c, o.contextTimeout)
+	defer cancel()
+	customer, err := o.customer.GetCustomerById(ctx, ID)
+	if err != nil {
+		return false, err
+	}
+	order, err := o.orders.GetAllOrderById(ctx, ID)
+	if err != nil {
+		return false, err
+	}
 	if (customer.Status == RegularBuyer && len(order) <= 5) || (customer.Status == SubcriptionBuyer) {
-		return true
+		return true, nil
 	}
-	return false
+	return false, nil
 }
