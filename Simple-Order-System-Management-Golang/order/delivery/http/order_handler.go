@@ -23,8 +23,9 @@ func NewOrderHandler(e *echo.Echo, order order.Usecase) {
 	handler := &OrderHandler{
 		OrderUsecase: order,
 	}
-	e.GET("/order", handler.FetchAllOrder)
-	e.GET("/order", handler.FetchAllOrderByID)
+	e.GET("/orders", handler.FetchAllOrder)
+	e.GET("/orders/:id", handler.FetchAllOrderByID)
+	e.GET("/order/:id", handler.FetchOrderByID)
 }
 
 func (order *OrderHandler) FetchAllOrder(c echo.Context) error {
@@ -43,18 +44,37 @@ func (order *OrderHandler) FetchAllOrder(c echo.Context) error {
 }
 
 func (order *OrderHandler) FetchAllOrderByID(c echo.Context) error {
-	ids := c.QueryParam("id")
-	id, _ := strconv.Atoi(ids)
+	idorder, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return err
+	}
+	id := int64(idorder)
 	ctx := c.Request().Context()
 	if ctx == nil {
 		ctx = context.Background()
 	}
-	listorders, err := order.OrderUsecase.GetAllOrderById(ctx, int64(id))
+	listorders, err := order.OrderUsecase.GetAllOrderById(ctx, id)
 
 	if err != nil {
 		return c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
 	}
 	return c.JSON(http.StatusOK, listorders)
+}
+
+func (order *OrderHandler) FetchOrderByID(c echo.Context) error {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return err
+	}
+	ctx := c.Request().Context()
+	if ctx != nil {
+		ctx = context.Background()
+	}
+	orderid, err := order.OrderUsecase.GetOrderById(ctx, int64(id))
+	if err != nil {
+		c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
+	}
+	return c.JSON(http.StatusOK, orderid)
 }
 
 func getStatusCode(err error) int {

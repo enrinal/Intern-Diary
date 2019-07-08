@@ -9,7 +9,7 @@ import (
 type Usecase interface {
 	GetAllOrder(c context.Context, num int64) ([]*models.Order, error)
 	GetAllOrderById(c context.Context, ID int64) ([]*models.Order, error)
-	GetOrderById(ID int64) (*models.Order, error)
+	GetOrderById(c context.Context, ID int64) (*models.Order, error)
 	ChangeOrderSend(c context.Context, ID int64) error
 	ChangeOrderProcess(c context.Context, ID int64) error
 	ChangeOrderDelivered(c context.Context, ID int64) error
