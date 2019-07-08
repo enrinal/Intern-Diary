@@ -26,6 +26,7 @@ func NewOrderHandler(e *echo.Echo, order order.Usecase) {
 	e.GET("/orders", handler.FetchAllOrder)
 	e.GET("/orders/:id", handler.FetchAllOrderByID)
 	e.GET("/order/:id", handler.FetchOrderByID)
+	e.GET("/checklimitorder/:id", handler.ChekcLimitOrder)
 }
 
 func (order *OrderHandler) FetchAllOrder(c echo.Context) error {
@@ -75,6 +76,22 @@ func (order *OrderHandler) FetchOrderByID(c echo.Context) error {
 		c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
 	}
 	return c.JSON(http.StatusOK, orderid)
+}
+
+func (order *OrderHandler) ChekcLimitOrder(c echo.Context) error {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return err
+	}
+	ctx := c.Request().Context()
+	if ctx != nil {
+		ctx = context.Background()
+	}
+	checklimit, err := order.OrderUsecase.CheckLimitOrder(ctx, int64(id))
+	if err != nil {
+		c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
+	}
+	return c.JSON(http.StatusOK, checklimit)
 }
 
 func getStatusCode(err error) int {

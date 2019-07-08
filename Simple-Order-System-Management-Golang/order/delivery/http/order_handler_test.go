@@ -99,3 +99,33 @@ func TestFetchOrderID(t *testing.T) {
 	mockUCase.AssertExpectations(t)
 
 }
+
+func TestCheckLimitOrder(t *testing.T) {
+	var limitorder bool
+	var mockOrder models.Order
+	err := faker.FakeData(&mockOrder)
+	assert.NoError(t, err)
+
+	mockUCase := new(mocks.Usecase)
+	id := int(mockOrder.ID)
+
+	mockUCase.On("CheckLimitOrder", mock.Anything, int64(id)).Return(limitorder, nil)
+	e := echo.New()
+	req, err := http.NewRequest(echo.GET, "/checklimitorder/"+strconv.Itoa(id), strings.NewReader(""))
+	assert.NoError(t, err)
+
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetPath("checklimitorder/:id")
+	c.SetParamNames("id")
+	c.SetParamValues(strconv.Itoa(id))
+	handler := OrderHandler{
+		OrderUsecase: mockUCase,
+	}
+	err = handler.ChekcLimitOrder(c)
+	require.NoError(t, err)
+
+	assert.Equal(t, http.StatusOK, rec.Code)
+	mockUCase.AssertExpectations(t)
+
+}
