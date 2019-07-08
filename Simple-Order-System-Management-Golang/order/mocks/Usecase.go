@@ -118,13 +118,13 @@ func (_m *Usecase) GetAllOrder(c context.Context, num int64) ([]*models.Order, e
 	return r0, r1
 }
 
-// GetAllOrderById provides a mock function with given fields: ID
-func (_m *Usecase) GetAllOrderById(ID int64) ([]*models.Order, error) {
-	ret := _m.Called(ID)
+// GetAllOrderById provides a mock function with given fields: c, ID
+func (_m *Usecase) GetAllOrderById(c context.Context, ID int64) ([]*models.Order, error) {
+	ret := _m.Called(c, ID)
 
 	var r0 []*models.Order
-	if rf, ok := ret.Get(0).(func(int64) []*models.Order); ok {
-		r0 = rf(ID)
+	if rf, ok := ret.Get(0).(func(context.Context, int64) []*models.Order); ok {
+		r0 = rf(c, ID)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]*models.Order)
@@ -132,8 +132,8 @@ func (_m *Usecase) GetAllOrderById(ID int64) ([]*models.Order, error) {
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(int64) error); ok {
-		r1 = rf(ID)
+	if rf, ok := ret.Get(1).(func(context.Context, int64) error); ok {
+		r1 = rf(c, ID)
 	} else {
 		r1 = ret.Error(1)
 	}

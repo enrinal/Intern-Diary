@@ -40,3 +40,28 @@ func TestFetch(t *testing.T) {
 	assert.Equal(t, http.StatusOK, rec.Code)
 	mockUCase.AssertExpectations(t)
 }
+
+func TestFetchAllOrderByID(t *testing.T) {
+	var mockOrder models.Order
+	err := faker.FakeData(&mockOrder)
+	assert.NoError(t, err)
+	mockUCase := new(mocks.Usecase)
+	mockListOrder := make([]*models.Order, 0)
+	mockListOrder = append(mockListOrder, &mockOrder)
+	id := 1
+	mockUCase.On("GetAllOrderById", mock.Anything, int64(id)).Return(mockListOrder, nil)
+	e := echo.New()
+	req, err := http.NewRequest(echo.GET, "/orders?id=1", strings.NewReader(""))
+	assert.NoError(t, err)
+
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	handler := OrderHandler{
+		OrderUsecase: mockUCase,
+	}
+	err = handler.FetchAllOrderByID(c)
+	require.NoError(t, err)
+
+	assert.Equal(t, http.StatusOK, rec.Code)
+	mockUCase.AssertExpectations(t)
+}
