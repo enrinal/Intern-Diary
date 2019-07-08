@@ -81,12 +81,12 @@ func TestFetchOrderID(t *testing.T) {
 
 	mockUCase.On("GetOrderById", mock.Anything, int64(id)).Return(&mockOrder, nil)
 	e := echo.New()
-	req, err := http.NewRequest(echo.GET, "/order/"+strconv.Itoa(id), strings.NewReader(""))
+	req, err := http.NewRequest(echo.GET, "/customer/order/"+strconv.Itoa(id), strings.NewReader(""))
 	assert.NoError(t, err)
 
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
-	c.SetPath("order/:id")
+	c.SetPath("customer/order/:id")
 	c.SetParamNames("id")
 	c.SetParamValues(strconv.Itoa(id))
 	handler := OrderHandler{
@@ -158,4 +158,91 @@ func TestOrderCountId(t *testing.T) {
 	assert.Equal(t, http.StatusOK, rec.Code)
 	mockUCase.AssertExpectations(t)
 
+}
+
+func TestChangeOrderProcess(t *testing.T) {
+	var mockOrder models.Order
+	err := faker.FakeData(&mockOrder)
+	assert.NoError(t, err)
+
+	mockUCase := new(mocks.Usecase)
+	id := int(mockOrder.ID)
+
+	mockUCase.On("ChangeOrderProcess", mock.Anything, int64(id)).Return(nil)
+	mockUCase.On("GetOrderById", mock.Anything, int64(id)).Return(&mockOrder, nil)
+	e := echo.New()
+	req, err := http.NewRequest(echo.PUT, "/changeorderprocess/"+strconv.Itoa(id), strings.NewReader(""))
+	assert.NoError(t, err)
+
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetPath("changeorderprocess/:id")
+	c.SetParamNames("id")
+	c.SetParamValues(strconv.Itoa(id))
+	handler := OrderHandler{
+		OrderUsecase: mockUCase,
+	}
+	err = handler.ChangeOrderProcess(c)
+	require.NoError(t, err)
+
+	assert.Equal(t, http.StatusOK, rec.Code)
+	mockUCase.AssertExpectations(t)
+}
+
+func TestChangeOrderSend(t *testing.T) {
+	var mockOrder models.Order
+	err := faker.FakeData(&mockOrder)
+	assert.NoError(t, err)
+
+	mockUCase := new(mocks.Usecase)
+	id := int(mockOrder.ID)
+
+	mockUCase.On("ChangeOrderSend", mock.Anything, int64(id)).Return(nil)
+	mockUCase.On("GetOrderById", mock.Anything, int64(id)).Return(&mockOrder, nil)
+	e := echo.New()
+	req, err := http.NewRequest(echo.PUT, "/changeordersend/"+strconv.Itoa(id), strings.NewReader(""))
+	assert.NoError(t, err)
+
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetPath("changeordersend/:id")
+	c.SetParamNames("id")
+	c.SetParamValues(strconv.Itoa(id))
+	handler := OrderHandler{
+		OrderUsecase: mockUCase,
+	}
+	err = handler.ChangeOrderSend(c)
+	require.NoError(t, err)
+
+	assert.Equal(t, http.StatusOK, rec.Code)
+	mockUCase.AssertExpectations(t)
+}
+
+func TestChangeOrderDelivered(t *testing.T) {
+	var mockOrder models.Order
+	err := faker.FakeData(&mockOrder)
+	assert.NoError(t, err)
+
+	mockUCase := new(mocks.Usecase)
+	id := int(mockOrder.ID)
+
+	mockUCase.On("ChangeOrderDelivered", mock.Anything, int64(id)).Return(nil)
+	mockUCase.On("GetOrderById", mock.Anything, int64(id)).Return(&mockOrder, nil)
+	e := echo.New()
+	req, err := http.NewRequest(echo.PUT, "/changeorderdelivered/"+strconv.Itoa(id), strings.NewReader(""))
+	assert.NoError(t, err)
+
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetPath("changeorderdelivered/:id")
+	c.SetParamNames("id")
+	c.SetParamValues(strconv.Itoa(id))
+	handler := OrderHandler{
+		OrderUsecase: mockUCase,
+	}
+	err = handler.ChangeOrderDelivered(c)
+	require.NoError(t, err)
+
+	assert.Equal(t, http.StatusOK, rec.Code)
+	mockUCase.AssertExpectations(t)
 }
