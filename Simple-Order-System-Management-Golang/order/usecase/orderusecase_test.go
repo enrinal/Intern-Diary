@@ -1,8 +1,12 @@
 package usecase
 
 import (
+	"context"
 	"testing"
+	"time"
 
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 	customers "gitlab.warungpintar.co/enrinal/intern-diary/simple-order/customer/mocks"
 	"gitlab.warungpintar.co/enrinal/intern-diary/simple-order/models"
 	orders "gitlab.warungpintar.co/enrinal/intern-diary/simple-order/order/mocks"
@@ -10,8 +14,8 @@ import (
 
 func TestGetAllOrder(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
-		Ordermocks := &orders.Usecase{}
-		Ordermocks.On("GetAllOrder").Return([]*models.Order{
+		Ordermocks := &orders.Repository{}
+		Ordermocks.On("GetAllOrder", mock.Anything, mock.AnythingOfType("int64")).Return([]*models.Order{
 			&models.Order{ID: 1, Item: "Mobil"},
 			&models.Order{ID: 1, Item: "Mobil"},
 			&models.Order{ID: 1, Item: "Mobil"},
@@ -23,94 +27,58 @@ func TestGetAllOrder(t *testing.T) {
 			&models.Order{ID: 1, Item: "Mobil"},
 			&models.Order{ID: 1, Item: "Mobil"},
 		}, nil)
-		Order := NewOrderUsecase(Ordermocks, nil)
-		c := Order.GetAllOrder()
-		if len(c) != 10 {
-			t.Errorf("Error harus 10, yang di dapat %d", len(c))
-		}
+		Order := NewOrderUsecase(Ordermocks, nil, time.Second*2)
+		c, err := Order.GetAllOrder(context.TODO(), int64(10))
+		assert.NoError(t, err)
+		assert.Len(t, c, 10)
 	})
 }
 
 func TestGetOrderById(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
-		Ordermocks := &orders.Usecase{}
-		Ordermocks.On("GetOrderById", int64(2)).Return(&models.Order{ID: 2, Item: "Mobil", Status: 1}, nil)
-		Order := NewOrderUsecase(Ordermocks, nil)
-		c := Order.GetOrderById(int64(2))
-
-		if c == nil {
-			t.Errorf("Error not found id")
-		}
+		Ordermocks := &orders.Repository{}
+		Ordermocks.On("GetOrderById", mock.Anything, int64(2)).Return(&models.Order{ID: 2, Item: "Mobil", Status: 1}, nil)
+		Order := NewOrderUsecase(Ordermocks, nil, time.Second*2)
+		c, err := Order.GetOrderById(context.TODO(), int64(2))
+		assert.NoError(t, err)
+		assert.NotNil(t, c)
 	})
 }
 
 func TestOrderProcess(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
-		Ordermocks := &orders.Usecase{}
-		Ordermocks.On("GetOrderById", int64(2)).Return(&models.Order{ID: 2, Item: "Mobil", Status: 1}, nil)
-		Order := NewOrderUsecase(Ordermocks, nil)
-		c := Order.ChangeOrderProcess(int64(2))
-		if c != "Order Process" {
-			t.Errorf("Error not found id")
-		}
-	})
-	t.Run("success", func(t *testing.T) {
-		Ordermocks := &orders.Usecase{}
-		Ordermocks.On("GetOrderById", int64(2)).Return(&models.Order{ID: 2, Item: "Mobil", Status: 2}, nil)
-		Order := NewOrderUsecase(Ordermocks, nil)
-		c := Order.ChangeOrderProcess(int64(2))
-		if c != "Error Change Status to Process" {
-			t.Errorf("Error not found id")
-		}
+		Ordermocks := &orders.Repository{}
+		Ordermocks.On("GetOrderById", mock.Anything, int64(2)).Return(&models.Order{ID: 2, Item: "Mobil", Status: 1}, nil)
+		Order := NewOrderUsecase(Ordermocks, nil, time.Second*2)
+		err := Order.ChangeOrderProcess(context.TODO(), int64(2))
+		assert.NoError(t, err)
 	})
 }
 
 func TestOrderSend(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
-		Ordermocks := &orders.Usecase{}
-		Ordermocks.On("GetOrderById", int64(2)).Return(&models.Order{ID: 2, Item: "Mobil", Status: 2}, nil)
-		Order := NewOrderUsecase(Ordermocks, nil)
-		c := Order.ChangeOrderSend(int64(2))
-		if c != "Order Send" {
-			t.Errorf("Error not found id")
-		}
-	})
-	t.Run("success", func(t *testing.T) {
-		Ordermocks := &orders.Usecase{}
-		Ordermocks.On("GetOrderById", int64(2)).Return(&models.Order{ID: 2, Item: "Mobil", Status: 1}, nil)
-		Order := NewOrderUsecase(Ordermocks, nil)
-		c := Order.ChangeOrderSend(int64(2))
-		if c != "Error Change Status to Send" {
-			t.Errorf("Error not found id")
-		}
+		Ordermocks := &orders.Repository{}
+		Ordermocks.On("GetOrderById", mock.Anything, int64(2)).Return(&models.Order{ID: 2, Item: "Mobil", Status: 2}, nil)
+		Order := NewOrderUsecase(Ordermocks, nil, time.Second*2)
+		err := Order.ChangeOrderProcess(context.TODO(), int64(2))
+		assert.NoError(t, err)
 	})
 }
 
 func TestOrderDelivered(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
-		Ordermocks := &orders.Usecase{}
-		Ordermocks.On("GetOrderById", int64(2)).Return(&models.Order{ID: 2, Item: "Mobil", Status: 3}, nil)
-		Order := NewOrderUsecase(Ordermocks, nil)
-		c := Order.ChangeOrderDelivered(int64(2))
-		if c != "Order Delivered" {
-			t.Errorf("Error not found id")
-		}
-	})
-	t.Run("success", func(t *testing.T) {
-		Ordermocks := &orders.Usecase{}
-		Ordermocks.On("GetOrderById", int64(2)).Return(&models.Order{ID: 2, Item: "Mobil", Status: 1}, nil)
-		Order := NewOrderUsecase(Ordermocks, nil)
-		c := Order.ChangeOrderDelivered(int64(2))
-		if c != "Error Change Status to Delivered" {
-			t.Errorf("Error not found id")
-		}
+		Ordermocks := &orders.Repository{}
+		Ordermocks.On("GetOrderById", mock.Anything, int64(2)).Return(&models.Order{ID: 2, Item: "Mobil", Status: 3}, nil)
+		Order := NewOrderUsecase(Ordermocks, nil, time.Second*2)
+		err := Order.ChangeOrderProcess(context.TODO(), int64(2))
+		assert.NoError(t, err)
 	})
 }
 
 func TestAllOrderByCustomerId(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
-		Ordermocks := &orders.Usecase{}
-		Ordermocks.On("GetAllOrderById", int64(1)).Return([]*models.Order{
+		Ordermocks := &orders.Repository{}
+		Ordermocks.On("GetAllOrderById", mock.Anything, int64(1)).Return([]*models.Order{
 			&models.Order{IDCust: 1, Item: "Mobil"},
 			&models.Order{IDCust: 1, Item: "Mobil"},
 			&models.Order{IDCust: 1, Item: "Mobil"},
@@ -122,18 +90,17 @@ func TestAllOrderByCustomerId(t *testing.T) {
 			&models.Order{IDCust: 1, Item: "Mobil"},
 			&models.Order{IDCust: 1, Item: "Mobil"},
 		}, nil)
-		Order := NewOrderUsecase(Ordermocks, nil)
-		c := Order.GetAllOrderById(1)
-		if len(c) != 10 {
-			t.Errorf("Error harus 10, yang di dapat %d", len(c))
-		}
+		Order := NewOrderUsecase(Ordermocks, nil, time.Second*2)
+		c, err := Order.GetAllOrderById(context.TODO(), int64(1))
+		assert.NoError(t, err)
+		assert.Len(t, c, 10)
 	})
 }
 
 func TestCountAllOrderByCustomerId(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
-		Ordermocks := &orders.Usecase{}
-		Ordermocks.On("GetAllOrderById", int64(1)).Return([]*models.Order{
+		Ordermocks := &orders.Repository{}
+		Ordermocks.On("GetAllOrderById", mock.Anything, int64(1)).Return([]*models.Order{
 			&models.Order{IDCust: 1, Item: "Mobil"},
 			&models.Order{IDCust: 1, Item: "Mobil"},
 			&models.Order{IDCust: 1, Item: "Mobil"},
@@ -145,18 +112,17 @@ func TestCountAllOrderByCustomerId(t *testing.T) {
 			&models.Order{IDCust: 1, Item: "Mobil"},
 			&models.Order{IDCust: 1, Item: "Mobil"},
 		}, nil)
-		Order := NewOrderUsecase(Ordermocks, nil)
-		c := Order.CountOrderCust(1)
-		if c != 10 {
-			t.Errorf("Error harus 10, yang di dapat %d", c)
-		}
+		Order := NewOrderUsecase(Ordermocks, nil, time.Second*2)
+		c, err := Order.CountOrderCust(context.TODO(), int64(1))
+		assert.NoError(t, err)
+		assert.Equal(t, c, 10)
 	})
 }
 
 func TestCheckLimitOrder(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
-		Ordermocks := &orders.Usecase{}
-		Ordermocks.On("GetAllOrderById", int64(1)).Return([]*models.Order{
+		Ordermocks := &orders.Repository{}
+		Ordermocks.On("GetAllOrderById", mock.Anything, int64(1)).Return([]*models.Order{
 			&models.Order{IDCust: 1, Item: "Mobil"},
 			&models.Order{IDCust: 1, Item: "Mobil"},
 			&models.Order{IDCust: 1, Item: "Mobil"},
@@ -168,17 +134,16 @@ func TestCheckLimitOrder(t *testing.T) {
 			&models.Order{IDCust: 1, Item: "Mobil"},
 			&models.Order{IDCust: 1, Item: "Mobil"},
 		}, nil)
-		customermocks := &customers.Usecase{}
-		customermocks.On("GetCustomerById", int64(1)).Return(&models.Customer{ID: 1, Name: "Name", Status: 2}, nil)
-		Order := NewOrderUsecase(Ordermocks, customermocks)
-		c := Order.CheckLimitOrder(1)
-		if c != true {
-			t.Errorf("Error Check Limit")
-		}
+		customermocks := &customers.Repository{}
+		customermocks.On("GetCustomerById", mock.Anything, int64(1)).Return(&models.Customer{ID: 1, Name: "Name", Status: 2}, nil)
+		Order := NewOrderUsecase(Ordermocks, customermocks, time.Second*2)
+		c, err := Order.CheckLimitOrder(context.TODO(), int64(1))
+		assert.NoError(t, err)
+		assert.Equal(t, c, true)
 	})
 	t.Run("success", func(t *testing.T) {
-		Ordermocks := &orders.Usecase{}
-		Ordermocks.On("GetAllOrderById", int64(1)).Return([]*models.Order{
+		Ordermocks := &orders.Repository{}
+		Ordermocks.On("GetAllOrderById", mock.Anything, int64(1)).Return([]*models.Order{
 			&models.Order{IDCust: 1, Item: "Mobil"},
 			&models.Order{IDCust: 1, Item: "Mobil"},
 			&models.Order{IDCust: 1, Item: "Mobil"},
@@ -190,12 +155,11 @@ func TestCheckLimitOrder(t *testing.T) {
 			&models.Order{IDCust: 1, Item: "Mobil"},
 			&models.Order{IDCust: 1, Item: "Mobil"},
 		}, nil)
-		customermocks := &customers.Usecase{}
-		customermocks.On("GetCustomerById", int64(1)).Return(&models.Customer{ID: 1, Name: "Name", Status: 1}, nil)
-		Order := NewOrderUsecase(Ordermocks, customermocks)
-		c := Order.CheckLimitOrder(1)
-		if c != false {
-			t.Errorf("Error Check Limit")
-		}
+		customermocks := &customers.Repository{}
+		customermocks.On("GetCustomerById", mock.Anything, int64(1)).Return(&models.Customer{ID: 1, Name: "Name", Status: 1}, nil)
+		Order := NewOrderUsecase(Ordermocks, customermocks, time.Second*2)
+		c, err := Order.CheckLimitOrder(context.TODO(), int64(1))
+		assert.NoError(t, err)
+		assert.Equal(t, c, false)
 	})
 }

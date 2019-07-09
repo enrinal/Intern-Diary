@@ -1,9 +1,12 @@
 package repository
 
 import (
+	"context"
 	"database/sql"
+	"fmt"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/sirupsen/logrus"
 	"gitlab.warungpintar.co/enrinal/intern-diary/simple-order/models"
 	"gitlab.warungpintar.co/enrinal/intern-diary/simple-order/order"
 )
@@ -23,102 +26,131 @@ func NewMysqlOrderRepository(Conn *sql.DB) order.Repository {
 	return &mysqlOrderRepository{Conn}
 }
 
-func (m *mysqlOrderRepository) GetAllOrder() ([]*models.Order, error) {
-	rows, err := m.query("SELECT id, idcust, item, status FROM order")
+func (m *mysqlOrderRepository) fetch(ctx context.Context, query string, args ...interface{}) ([]*models.Order, error) {
+	rows, err := m.Conn.QueryContext(ctx, query, args...)
 	if err != nil {
+		logrus.Error(err)
 		return nil, err
 	}
-	defer rows.Close()
 
-	listoder := make([]*models.Order, 0)
+	defer func() {
+		err := rows.Close()
+		if err != nil {
+			logrus.Error(err)
+		}
+	}()
+
+	result := make([]*models.Order, 0)
 	for rows.Next() {
 		order := &models.Order{}
 		err = rows.Scan(&order.ID, &order.IDCust, &order.Item, &order.Status)
 		if err != nil {
 			return nil, err
 		}
-		listoder = append(listoder, order)
+		result = append(result, order)
+	}
+	return result, nil
+}
+
+func (m *mysqlOrderRepository) GetAllOrder(ctx context.Context, num int64) ([]*models.Order, error) {
+	query := `SELECT id, idcust, item, status FROM order LIMIT ?`
+	listorder, err := m.fetch(ctx, query, num)
+	if err != nil {
+		return nil, err
+	}
+	return listorder, nil
+}
+
+func (m *mysqlOrderRepository) GetOrderById(ctx context.Context, ID int64) (result *models.Order, err error) {
+	query := `SELECT id, idcust, item, status FROM order WHERE id=?`
+	order, err := m.fetch(ctx, query, ID)
+	if err != nil {
+		return nil, err
+	}
+	if len(order) > 0 {
+		result = order[0]
+	} else {
+		return nil, models.ErrNotFound
+	}
+	return
+}
+
+func (m *mysqlOrderRepository) GetAllOrderById(ctx context.Context, ID int64) ([]*models.Order, error) {
+	query := `SELECT id, idcust, item, status FROM order WHERE idcust=?`
+	listoder, err := m.fetch(ctx, query, ID)
+	if err != nil {
+		return nil, err
 	}
 	return listoder, nil
 }
 
-func (m *mysqlOrderRepository) GetOrderById(ID int64) (*models.Order, error) {
-	row, err := m.queryRow("SELECT id, idcust, item, status FROM order WHERE id=$1", ID)
-	if err != nil {
-		return nil, err
-	}
-	order := &models.Order{}
-
-	err = row.Scan(&order.ID, &order.IDCust, &order.Item, &order.Status)
-	if err != nil {
-		return nil, err
-	}
-	return order, nil
-}
-
-func (m *mysqlOrderRepository) GetAllOrderById(ID int64) ([]*models.Order, error) {
-	rows, err := m.query("SELECT id, idcust, item, status FROM order WHERE idcust=$1", ID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	listoder := make([]*models.Order, 0)
-	for rows.Next() {
-		order := &models.Order{}
-		err = rows.Scan(&order.ID, &order.IDCust, &order.Item, &order.Status)
-		if err != nil {
-			return nil, err
-		}
-		listoder = append(listoder, order)
-	}
-	return listoder, nil
-}
-
-func (m *mysqlOrderRepository) ChangeOrderSend(ID int64) error {
-	rows, err := m.query("UPDATE order SET status=$1 WHERE id=$2", Send, ID)
+func (m *mysqlOrderRepository) ChangeOrderSend(ctx context.Context, ID int64) error {
+	query := `UPDATE order SET status=? WHERE id=?`
+	//PrepareContext creates a prepared statement for later queries or executions.
+	rows, err := m.Conn.PrepareContext(ctx, query)
 	if err != nil {
 		return err
 	}
-	defer rows.Close()
-	return err
-}
-
-func (m *mysqlOrderRepository) ChangeOrderProcess(ID int64) error {
-	rows, err := m.query("UPDATE order SET status=$1 WHERE id=$2", Process, ID)
+	//ExecContext executes a query without returning any rows.
+	result, err := rows.ExecContext(ctx, Send, ID)
 	if err != nil {
 		return err
 	}
-	defer rows.Close()
-	return err
-}
-func (m *mysqlOrderRepository) ChangeOrderDelivered(ID int64) error {
-	rows, err := m.query("UPDATE order SET status=$1 WHERE id=$2", Delivered, ID)
+	//RowsAffected returns the number of rows affected by an update, insert, or delete.
+	affect, err := result.RowsAffected()
 	if err != nil {
 		return err
 	}
-	defer rows.Close()
-	return err
+	if affect != 1 {
+		err = fmt.Errorf("Weird  Behaviour. Total Affected: %d", affect)
+		return err
+	}
+	return nil
 }
 
-// query to get multiple row
-func (m *mysqlOrderRepository) query(q string, args ...interface{}) (*sql.Rows, error) {
-	stmt, err := m.Conn.Prepare(q)
+func (m *mysqlOrderRepository) ChangeOrderProcess(ctx context.Context, ID int64) error {
+	query := `UPDATE order SET status=? WHERE id=?`
+	//PrepareContext creates a prepared statement for later queries or executions.
+	rows, err := m.Conn.PrepareContext(ctx, query)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	defer stmt.Close()
-
-	return stmt.Query(args...)
+	//ExecContext executes a query without returning any rows.
+	result, err := rows.ExecContext(ctx, Process, ID)
+	if err != nil {
+		return err
+	}
+	//RowsAffected returns the number of rows affected by an update, insert, or delete.
+	affect, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if affect != 1 {
+		err = fmt.Errorf("Weird  Behaviour. Total Affected: %d", affect)
+		return err
+	}
+	return nil
 }
-
-// queryRow to get one row
-func (m *mysqlOrderRepository) queryRow(q string, args ...interface{}) (*sql.Row, error) {
-	stmt, err := m.Conn.Prepare(q)
+func (m *mysqlOrderRepository) ChangeOrderDelivered(ctx context.Context, ID int64) error {
+	query := `UPDATE order SET status=? WHERE id=?`
+	//PrepareContext creates a prepared statement for later queries or executions.
+	rows, err := m.Conn.PrepareContext(ctx, query)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	defer stmt.Close()
-
-	return stmt.QueryRow(args...), nil
+	//ExecContext executes a query without returning any rows.
+	result, err := rows.ExecContext(ctx, Delivered, ID)
+	if err != nil {
+		return err
+	}
+	//RowsAffected returns the number of rows affected by an update, insert, or delete.
+	affect, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if affect != 1 {
+		err = fmt.Errorf("Weird  Behaviour. Total Affected: %d", affect)
+		return err
+	}
+	return nil
 }

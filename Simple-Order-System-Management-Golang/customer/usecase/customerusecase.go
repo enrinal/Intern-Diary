@@ -33,14 +33,6 @@ func (cust *CustomerUsecase) GetAllCustomer(c context.Context, num int64) ([]*mo
 	return listcustomer, nil
 }
 
-// func (c *CustomerUsecase) GetCustomerById(ID int64) (*models.Customer, error) {
-// 	customer, err := c.customers.GetCustomerById(ID)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	return customer, nil
-// }
-
 func (cust *CustomerUsecase) GetCustomerByID(c context.Context, ID int64) (*models.Customer, error) {
 	ctx, cancel := context.WithTimeout(c, cust.contextTimeout)
 	defer cancel()

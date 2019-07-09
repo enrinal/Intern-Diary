@@ -2,6 +2,7 @@
 
 package mocks
 
+import context "context"
 import mock "github.com/stretchr/testify/mock"
 import models "gitlab.warungpintar.co/enrinal/intern-diary/simple-order/models"
 
@@ -10,13 +11,13 @@ type Repository struct {
 	mock.Mock
 }
 
-// ChangeOrderDelivered provides a mock function with given fields: ID
-func (_m *Repository) ChangeOrderDelivered(ID int64) error {
-	ret := _m.Called(ID)
+// ChangeOrderDelivered provides a mock function with given fields: ctx, ID
+func (_m *Repository) ChangeOrderDelivered(ctx context.Context, ID int64) error {
+	ret := _m.Called(ctx, ID)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(int64) error); ok {
-		r0 = rf(ID)
+	if rf, ok := ret.Get(0).(func(context.Context, int64) error); ok {
+		r0 = rf(ctx, ID)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -24,13 +25,13 @@ func (_m *Repository) ChangeOrderDelivered(ID int64) error {
 	return r0
 }
 
-// ChangeOrderProcess provides a mock function with given fields: ID
-func (_m *Repository) ChangeOrderProcess(ID int64) error {
-	ret := _m.Called(ID)
+// ChangeOrderProcess provides a mock function with given fields: ctx, ID
+func (_m *Repository) ChangeOrderProcess(ctx context.Context, ID int64) error {
+	ret := _m.Called(ctx, ID)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(int64) error); ok {
-		r0 = rf(ID)
+	if rf, ok := ret.Get(0).(func(context.Context, int64) error); ok {
+		r0 = rf(ctx, ID)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -38,13 +39,13 @@ func (_m *Repository) ChangeOrderProcess(ID int64) error {
 	return r0
 }
 
-// ChangeOrderSend provides a mock function with given fields: ID
-func (_m *Repository) ChangeOrderSend(ID int64) error {
-	ret := _m.Called(ID)
+// ChangeOrderSend provides a mock function with given fields: ctx, ID
+func (_m *Repository) ChangeOrderSend(ctx context.Context, ID int64) error {
+	ret := _m.Called(ctx, ID)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(int64) error); ok {
-		r0 = rf(ID)
+	if rf, ok := ret.Get(0).(func(context.Context, int64) error); ok {
+		r0 = rf(ctx, ID)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -52,13 +53,13 @@ func (_m *Repository) ChangeOrderSend(ID int64) error {
 	return r0
 }
 
-// GetAllOrder provides a mock function with given fields:
-func (_m *Repository) GetAllOrder() ([]*models.Order, error) {
-	ret := _m.Called()
+// GetAllOrder provides a mock function with given fields: ctx, num
+func (_m *Repository) GetAllOrder(ctx context.Context, num int64) ([]*models.Order, error) {
+	ret := _m.Called(ctx, num)
 
 	var r0 []*models.Order
-	if rf, ok := ret.Get(0).(func() []*models.Order); ok {
-		r0 = rf()
+	if rf, ok := ret.Get(0).(func(context.Context, int64) []*models.Order); ok {
+		r0 = rf(ctx, num)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]*models.Order)
@@ -66,8 +67,8 @@ func (_m *Repository) GetAllOrder() ([]*models.Order, error) {
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func() error); ok {
-		r1 = rf()
+	if rf, ok := ret.Get(1).(func(context.Context, int64) error); ok {
+		r1 = rf(ctx, num)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -75,13 +76,13 @@ func (_m *Repository) GetAllOrder() ([]*models.Order, error) {
 	return r0, r1
 }
 
-// GetAllOrderById provides a mock function with given fields: ID
-func (_m *Repository) GetAllOrderById(ID int64) ([]*models.Order, error) {
-	ret := _m.Called(ID)
+// GetAllOrderById provides a mock function with given fields: ctx, ID
+func (_m *Repository) GetAllOrderById(ctx context.Context, ID int64) ([]*models.Order, error) {
+	ret := _m.Called(ctx, ID)
 
 	var r0 []*models.Order
-	if rf, ok := ret.Get(0).(func(int64) []*models.Order); ok {
-		r0 = rf(ID)
+	if rf, ok := ret.Get(0).(func(context.Context, int64) []*models.Order); ok {
+		r0 = rf(ctx, ID)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]*models.Order)
@@ -89,8 +90,8 @@ func (_m *Repository) GetAllOrderById(ID int64) ([]*models.Order, error) {
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(int64) error); ok {
-		r1 = rf(ID)
+	if rf, ok := ret.Get(1).(func(context.Context, int64) error); ok {
+		r1 = rf(ctx, ID)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -98,13 +99,13 @@ func (_m *Repository) GetAllOrderById(ID int64) ([]*models.Order, error) {
 	return r0, r1
 }
 
-// GetOrderById provides a mock function with given fields: ID
-func (_m *Repository) GetOrderById(ID int64) (*models.Order, error) {
-	ret := _m.Called(ID)
+// GetOrderById provides a mock function with given fields: ctx, ID
+func (_m *Repository) GetOrderById(ctx context.Context, ID int64) (*models.Order, error) {
+	ret := _m.Called(ctx, ID)
 
 	var r0 *models.Order
-	if rf, ok := ret.Get(0).(func(int64) *models.Order); ok {
-		r0 = rf(ID)
+	if rf, ok := ret.Get(0).(func(context.Context, int64) *models.Order); ok {
+		r0 = rf(ctx, ID)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*models.Order)
@@ -112,8 +113,8 @@ func (_m *Repository) GetOrderById(ID int64) (*models.Order, error) {
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(int64) error); ok {
-		r1 = rf(ID)
+	if rf, ok := ret.Get(1).(func(context.Context, int64) error); ok {
+		r1 = rf(ctx, ID)
 	} else {
 		r1 = ret.Error(1)
 	}
