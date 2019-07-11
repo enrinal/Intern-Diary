@@ -26,6 +26,7 @@ func NewCartHandler(e *echo.Echo, cart cart.Usecase) {
 	}
 	e.GET("/cart/:id", handler.FetchCustCart)
 	e.POST("/cart", handler.Store)
+	e.DELETE("/cart", handler.Delete)
 }
 
 func (cart *CartHandler) FetchCustCart(c echo.Context) error {
@@ -92,4 +93,27 @@ func isRequestValid(m *models.Cart) (bool, error) {
 		return false, err
 	}
 	return true, nil
+}
+
+func (a *CartHandler) Delete(c echo.Context) error {
+	var cart models.Cart
+	err := c.Bind(&cart)
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, err.Error())
+	}
+
+	if ok, err := isRequestValid(&cart); !ok {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+	ctx := c.Request().Context()
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	err = a.CartUsecase.RemoveItem(cart)
+
+	if err != nil {
+		return c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
+	}
+	return c.JSON(http.StatusCreated, cart)
 }
