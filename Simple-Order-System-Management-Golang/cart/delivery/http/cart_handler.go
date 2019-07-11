@@ -9,6 +9,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"gitlab.warungpintar.co/enrinal/intern-diary/simple-order/cart"
 	"gitlab.warungpintar.co/enrinal/intern-diary/simple-order/models"
+	validator "gopkg.in/go-playground/validator.v9"
 )
 
 type ResponseError struct {
@@ -24,6 +25,7 @@ func NewCartHandler(e *echo.Echo, cart cart.Usecase) {
 		CartUsecase: cart,
 	}
 	e.GET("/cart/:id", handler.FetchCustCart)
+	e.POST("/cart", handler.Store)
 }
 
 func (cart *CartHandler) FetchCustCart(c echo.Context) error {
@@ -43,6 +45,29 @@ func (cart *CartHandler) FetchCustCart(c echo.Context) error {
 	return c.JSON(http.StatusOK, listcart)
 }
 
+func (a *CartHandler) Store(c echo.Context) error {
+	var cart models.Cart
+	err := c.Bind(&cart)
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, err.Error())
+	}
+
+	if ok, err := isRequestValid(&cart); !ok {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+	ctx := c.Request().Context()
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	err = a.CartUsecase.AddItem(cart)
+
+	if err != nil {
+		return c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
+	}
+	return c.JSON(http.StatusCreated, cart)
+}
+
 func getStatusCode(err error) int {
 	if err == nil {
 		return http.StatusOK
@@ -58,4 +83,13 @@ func getStatusCode(err error) int {
 	default:
 		return http.StatusInternalServerError
 	}
+}
+
+func isRequestValid(m *models.Cart) (bool, error) {
+	validate := validator.New()
+	err := validate.Struct(m)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }
