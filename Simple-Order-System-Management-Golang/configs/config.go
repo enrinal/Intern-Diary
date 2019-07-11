@@ -10,7 +10,7 @@ import (
 )
 
 func ConnectDB() (*sql.DB, error) {
-	viper.SetConfigFile("config.json")
+	viper.SetConfigFile(`config.json`)
 	err := viper.ReadInConfig()
 
 	if err != nil {

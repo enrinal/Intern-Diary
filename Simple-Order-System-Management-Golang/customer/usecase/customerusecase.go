@@ -13,12 +13,13 @@ type CustomerUsecase struct {
 	contextTimeout time.Duration
 }
 
-func NewCustomerUsecase(customers customer.Repository, timeout time.Duration) CustomerUsecase {
-	return CustomerUsecase{
+func NewCustomerUsecase(customers customer.Repository, timeout time.Duration) customer.Usecase {
+	return &CustomerUsecase{
 		customers:      customers,
 		contextTimeout: timeout,
 	}
 }
+
 func (cust *CustomerUsecase) GetAllCustomer(c context.Context, num int64) ([]*models.Customer, error) {
 	if num == 0 {
 		num = 10
