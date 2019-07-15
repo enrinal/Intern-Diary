@@ -23,8 +23,8 @@ func NewCustomerHandler(e *echo.Echo, cust customer.Usecase) {
 	handler := &CustomerHandler{
 		CustUsecase: cust,
 	}
-	e.GET("/customers", handler.FetchCustomer)
-	e.GET("/customers/:id", handler.FetchCustomerByID)
+	e.GET("/api/v1/customers", handler.FetchCustomer)
+	e.GET("/api/v1/customers/:id", handler.FetchCustomerByID)
 }
 
 func (cust *CustomerHandler) FetchCustomer(c echo.Context) error {
