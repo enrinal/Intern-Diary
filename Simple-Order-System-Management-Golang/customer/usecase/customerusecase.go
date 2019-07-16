@@ -43,3 +43,35 @@ func (cust *CustomerUsecase) GetCustomerByID(c context.Context, ID int64) (*mode
 	}
 	return customer, nil
 }
+
+func (cust *CustomerUsecase) Add(c context.Context, m *models.Customer) error {
+
+	ctx, cancel := context.WithTimeout(c, cust.contextTimeout)
+	defer cancel()
+
+	err := cust.customers.Add(ctx, m)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (cust *CustomerUsecase) Delete(c context.Context, id int64) error {
+	ctx, cancel := context.WithTimeout(c, cust.contextTimeout)
+	defer cancel()
+	err := cust.customers.Delete(ctx, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (cust *CustomerUsecase) Update(c context.Context, m *models.Customer) error {
+	ctx, cancel := context.WithTimeout(c, cust.contextTimeout)
+	defer cancel()
+	err := cust.customers.Update(ctx, m)
+	if err != nil {
+		return err
+	}
+	return nil
+}
