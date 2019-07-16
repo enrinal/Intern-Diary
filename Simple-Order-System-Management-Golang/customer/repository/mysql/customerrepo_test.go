@@ -101,7 +101,7 @@ func TestDelete(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestUpdate(t *testing.T){
+func TestUpdate(t *testing.T) {
 	cust := &models.Customer{
 		ID: 1, Name: "Muhamad Enrinal Zulhimar", Status: 1,
 	}
@@ -112,9 +112,9 @@ func TestUpdate(t *testing.T){
 	}
 
 	defer db.Close()
-	query := "UPDATE customer set ID=\\?, Name=\\?, Status=\\?"
+	query := "UPDATE customer SET Name=\\?, Status=\\? WHERE customer.ID=\\?"
 	prep := mock.ExpectPrepare(query)
-	prep.ExpectExec().WithArgs(cust.ID, cust.Name, cust.Status).WillReturnResult(sqlmock.NewResult(1, 1))
+	prep.ExpectExec().WithArgs(cust.Name, cust.Status, cust.ID).WillReturnResult(sqlmock.NewResult(1, 1))
 
 	cr := NewMysqlCustomerRepository(db)
 

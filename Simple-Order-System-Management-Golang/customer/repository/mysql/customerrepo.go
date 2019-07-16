@@ -115,14 +115,14 @@ func (m *mysqlCustomerRepository) Delete(ctx context.Context, id int64) error {
 }
 
 func (m *mysqlCustomerRepository) Update(ctx context.Context, cust *models.Customer) error {
-	query := `UPDATE customer set ID=?, Name=?, Status=?`
+	query := `UPDATE customer SET Name=?, Status=? WHERE customer.ID=?`
 
 	stmt, err := m.Conn.PrepareContext(ctx, query)
 	if err != nil {
 		return nil
 	}
 
-	res, err := stmt.ExecContext(ctx, cust.ID, cust.Name, cust.Status)
+	res, err := stmt.ExecContext(ctx, cust.Name, cust.Status, cust.ID)
 	if err != nil {
 		return err
 	}

@@ -28,7 +28,7 @@ func NewCustomerHandler(e *echo.Echo, cust customer.Usecase) {
 	e.GET("/api/v1/customers/:id", handler.FetchCustomerByID)
 	e.POST("/api/v1/customers", handler.AddCustomer)
 	e.PUT("/api/v1/customers", handler.UpdateCustomer)
-	e.DELETE("/api/v1/customers", handler.DeleteCustomer)
+	e.DELETE("/api/v1/customers/:id", handler.DeleteCustomer)
 }
 
 func (cust *CustomerHandler) FetchCustomer(c echo.Context) error {
