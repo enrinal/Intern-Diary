@@ -27,8 +27,8 @@ type OrderUsecase struct {
 	contextTimeout time.Duration
 }
 
-func NewOrderUsecase(orders order.Repository, customer customer.Repository, timeout time.Duration) OrderUsecase {
-	return OrderUsecase{
+func NewOrderUsecase(orders order.Repository, customer customer.Repository, timeout time.Duration) order.Usecase {
+	return &OrderUsecase{
 		orders:         orders,
 		customer:       customer,
 		contextTimeout: timeout,
@@ -58,33 +58,30 @@ func (o *OrderUsecase) GetOrderById(c context.Context, ID int64) (*models.Order,
 func (o *OrderUsecase) ChangeOrderProcess(c context.Context, ID int64) error {
 	ctx, cancel := context.WithTimeout(c, o.contextTimeout)
 	defer cancel()
-	order, err := o.orders.GetOrderById(ctx, ID)
+	err := o.orders.ChangeOrderProcess(ctx, ID)
 	if err != nil {
 		return err
 	}
-	order.Status = Process
 	return nil
 }
 
 func (o *OrderUsecase) ChangeOrderSend(c context.Context, ID int64) error {
 	ctx, cancel := context.WithTimeout(c, o.contextTimeout)
 	defer cancel()
-	order, err := o.orders.GetOrderById(ctx, ID)
+	err := o.orders.ChangeOrderSend(ctx, ID)
 	if err != nil {
 		return err
 	}
-	order.Status = Send
 	return nil
 }
 
 func (o *OrderUsecase) ChangeOrderDelivered(c context.Context, ID int64) error {
 	ctx, cancel := context.WithTimeout(c, o.contextTimeout)
 	defer cancel()
-	order, err := o.orders.GetOrderById(ctx, ID)
+	err := o.orders.ChangeOrderDelivered(ctx, ID)
 	if err != nil {
 		return err
 	}
-	order.Status = Delivered
 	return nil
 }
 

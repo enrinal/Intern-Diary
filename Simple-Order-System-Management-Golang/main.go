@@ -12,10 +12,14 @@ import (
 
 	"github.com/labstack/echo"
 	"github.com/spf13/viper"
-	"gitlab.warungpintar.co/enrinal/intern-diary/simple-order/middleware"
 	_customerHttpDeliver "gitlab.warungpintar.co/enrinal/intern-diary/simple-order/customer/delivery/http"
 	_customerRepo "gitlab.warungpintar.co/enrinal/intern-diary/simple-order/customer/repository/mysql"
 	_cusotmerUsecase "gitlab.warungpintar.co/enrinal/intern-diary/simple-order/customer/usecase"
+	"gitlab.warungpintar.co/enrinal/intern-diary/simple-order/middleware"
+
+	_orderHttpDeliver "gitlab.warungpintar.co/enrinal/intern-diary/simple-order/order/delivery/http"
+	_orderRepo "gitlab.warungpintar.co/enrinal/intern-diary/simple-order/order/repository/mysql"
+	_orderUsecase "gitlab.warungpintar.co/enrinal/intern-diary/simple-order/order/usecase"
 )
 
 func init() {
@@ -63,7 +67,12 @@ func main() {
 
 	customerrepo := _customerRepo.NewMysqlCustomerRepository(dbConn)
 	timeoutContext := time.Duration(viper.GetInt("context.timeout")) * time.Second
-	customerusecase :=  _cusotmerUsecase.NewCustomerUsecase(customerrepo, timeoutContext)
-	_customerHttpDeliver.NewCustomerHandler(e,customerusecase)
+	customerusecase := _cusotmerUsecase.NewCustomerUsecase(customerrepo, timeoutContext)
+	_customerHttpDeliver.NewCustomerHandler(e, customerusecase)
+
+	orderrepo := _orderRepo.NewMysqlOrderRepository(dbConn)
+	orderusecase := _orderUsecase.NewOrderUsecase(orderrepo, customerrepo, timeoutContext)
+	_orderHttpDeliver.NewOrderHandler(e, orderusecase)
+
 	log.Fatal(e.Start(viper.GetString("server.address")))
 }

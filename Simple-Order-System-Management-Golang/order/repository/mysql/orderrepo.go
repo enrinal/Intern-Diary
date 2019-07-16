@@ -53,7 +53,7 @@ func (m *mysqlOrderRepository) fetch(ctx context.Context, query string, args ...
 }
 
 func (m *mysqlOrderRepository) GetAllOrder(ctx context.Context, num int64) ([]*models.Order, error) {
-	query := `SELECT id, idcust, item, status FROM order LIMIT ?`
+	query := "SELECT id, idcust, item, status FROM `order` LIMIT ?"
 	listorder, err := m.fetch(ctx, query, num)
 	if err != nil {
 		return nil, err
@@ -62,7 +62,7 @@ func (m *mysqlOrderRepository) GetAllOrder(ctx context.Context, num int64) ([]*m
 }
 
 func (m *mysqlOrderRepository) GetOrderById(ctx context.Context, ID int64) (result *models.Order, err error) {
-	query := `SELECT id, idcust, item, status FROM order WHERE id=?`
+	query := "SELECT id, idcust, item, status FROM `order` WHERE id=?"
 	order, err := m.fetch(ctx, query, ID)
 	if err != nil {
 		return nil, err
@@ -76,7 +76,7 @@ func (m *mysqlOrderRepository) GetOrderById(ctx context.Context, ID int64) (resu
 }
 
 func (m *mysqlOrderRepository) GetAllOrderById(ctx context.Context, ID int64) ([]*models.Order, error) {
-	query := `SELECT id, idcust, item, status FROM order WHERE idcust=?`
+	query := "SELECT id, idcust, item, status FROM `order` WHERE idcust=?"
 	listoder, err := m.fetch(ctx, query, ID)
 	if err != nil {
 		return nil, err
@@ -85,7 +85,7 @@ func (m *mysqlOrderRepository) GetAllOrderById(ctx context.Context, ID int64) ([
 }
 
 func (m *mysqlOrderRepository) ChangeOrderSend(ctx context.Context, ID int64) error {
-	query := `UPDATE order SET status=? WHERE id=?`
+	query := "UPDATE `order` SET status=? WHERE id=?"
 	//PrepareContext creates a prepared statement for later queries or executions.
 	rows, err := m.Conn.PrepareContext(ctx, query)
 	if err != nil {
@@ -109,7 +109,7 @@ func (m *mysqlOrderRepository) ChangeOrderSend(ctx context.Context, ID int64) er
 }
 
 func (m *mysqlOrderRepository) ChangeOrderProcess(ctx context.Context, ID int64) error {
-	query := `UPDATE order SET status=? WHERE id=?`
+	query :="UPDATE `order` SET status=? WHERE id=?"
 	//PrepareContext creates a prepared statement for later queries or executions.
 	rows, err := m.Conn.PrepareContext(ctx, query)
 	if err != nil {
@@ -132,7 +132,7 @@ func (m *mysqlOrderRepository) ChangeOrderProcess(ctx context.Context, ID int64)
 	return nil
 }
 func (m *mysqlOrderRepository) ChangeOrderDelivered(ctx context.Context, ID int64) error {
-	query := `UPDATE order SET status=? WHERE id=?`
+	query := "UPDATE `order` SET status=? WHERE id=?"
 	//PrepareContext creates a prepared statement for later queries or executions.
 	rows, err := m.Conn.PrepareContext(ctx, query)
 	if err != nil {
