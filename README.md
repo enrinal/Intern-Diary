@@ -5,7 +5,7 @@ Selection of projects accompanying the Intern day by day
 Setiap Directory Project disusun day-by-day 
 
 # Projetc In This Repository
-* Simple Order Management System (Check Folder for More Information)
+* [Simple Order Management System (Check Folder for More Information)](https://gitlab.warungpintar.co/enrinal/intern-diary/tree/master/Simple-Order-System-Management-Golang)
 * ...
 
 
