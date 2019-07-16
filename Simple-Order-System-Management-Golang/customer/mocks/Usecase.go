@@ -12,6 +12,34 @@ type Usecase struct {
 	mock.Mock
 }
 
+// Add provides a mock function with given fields: _a0, _a1
+func (_m *Usecase) Add(_a0 context.Context, _a1 *models.Customer) error {
+	ret := _m.Called(_a0, _a1)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, *models.Customer) error); ok {
+		r0 = rf(_a0, _a1)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// Delete provides a mock function with given fields: ctx, id
+func (_m *Usecase) Delete(ctx context.Context, id int64) error {
+	ret := _m.Called(ctx, id)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, int64) error); ok {
+		r0 = rf(ctx, id)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // GetAllCustomer provides a mock function with given fields: ctx, num
 func (_m *Usecase) GetAllCustomer(ctx context.Context, num int64) ([]*models.Customer, error) {
 	ret := _m.Called(ctx, num)
@@ -56,4 +84,18 @@ func (_m *Usecase) GetCustomerByID(ctx context.Context, id int64) (*models.Custo
 	}
 
 	return r0, r1
+}
+
+// Update provides a mock function with given fields: ctx, cust
+func (_m *Usecase) Update(ctx context.Context, cust *models.Customer) error {
+	ret := _m.Called(ctx, cust)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, *models.Customer) error); ok {
+		r0 = rf(ctx, cust)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
 }

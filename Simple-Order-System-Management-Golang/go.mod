@@ -56,7 +56,7 @@ require (
 	google.golang.org/genproto v0.0.0-20190611190212-a7e196e89fd3 // indirect
 	google.golang.org/grpc v1.21.1 // indirect
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
-	gopkg.in/go-playground/validator.v9 v9.29.0 // indirect
+	gopkg.in/go-playground/validator.v9 v9.29.0
 	gopkg.in/mgo.v2 v2.0.0-20180705113604-9856a29383ce
 	gopkg.in/ory-am/dockertest.v3 v3.3.4 // indirect
 	honnef.co/go/tools v0.0.0-20190607181801-497c8f037f5a // indirect

@@ -12,6 +12,34 @@ type Repository struct {
 	mock.Mock
 }
 
+// Add provides a mock function with given fields: ctx, cust
+func (_m *Repository) Add(ctx context.Context, cust *models.Customer) error {
+	ret := _m.Called(ctx, cust)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, *models.Customer) error); ok {
+		r0 = rf(ctx, cust)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// Delete provides a mock function with given fields: ctx, id
+func (_m *Repository) Delete(ctx context.Context, id int64) error {
+	ret := _m.Called(ctx, id)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, int64) error); ok {
+		r0 = rf(ctx, id)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // Fetch provides a mock function with given fields: ctx, num
 func (_m *Repository) Fetch(ctx context.Context, num int64) ([]*models.Customer, error) {
 	ret := _m.Called(ctx, num)
@@ -56,4 +84,18 @@ func (_m *Repository) GetCustomerById(ctx context.Context, id int64) (*models.Cu
 	}
 
 	return r0, r1
+}
+
+// Update provides a mock function with given fields: ctx, cust
+func (_m *Repository) Update(ctx context.Context, cust *models.Customer) error {
+	ret := _m.Called(ctx, cust)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, *models.Customer) error); ok {
+		r0 = rf(ctx, cust)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
 }
