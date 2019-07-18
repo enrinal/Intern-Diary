@@ -7,9 +7,10 @@
     "timeout":2
     },
     "database": {
-        "host": "127.0.0.1",
+        "host": "mysql",
         "port": "3306",
-        "user": "root",
+        "user": "user",
+        "pass": "password",
         "dbname": "simpleorder"
     }
 }
