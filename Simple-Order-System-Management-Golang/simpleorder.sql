@@ -31,7 +31,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `customer` (
   `ID` int(11) NOT NULL,
   `Name` varchar(50) NOT NULL,
-  `Status` enum('1','2') NOT NULL
+  `Status` enum('1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --

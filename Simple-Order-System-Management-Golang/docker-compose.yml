@@ -12,8 +12,9 @@ services:
     volumes:
       - ./config.json:/app/config.json
   mysql:
-    image: mysql:5.7 
+    image: mariadb
     container_name: order_system_mysql
+    restart: always
     command: mysqld --user=root
     volumes:
       - ./simpleorder.sql:/docker-entrypoint-initdb.d/init.sql
