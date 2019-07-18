@@ -12,10 +12,14 @@ import (
 
 	"github.com/labstack/echo"
 	"github.com/spf13/viper"
-	"gitlab.warungpintar.co/enrinal/intern-diary/simple-order/middleware"
 	_customerHttpDeliver "gitlab.warungpintar.co/enrinal/intern-diary/simple-order/customer/delivery/http"
 	_customerRepo "gitlab.warungpintar.co/enrinal/intern-diary/simple-order/customer/repository/mysql"
 	_cusotmerUsecase "gitlab.warungpintar.co/enrinal/intern-diary/simple-order/customer/usecase"
+	"gitlab.warungpintar.co/enrinal/intern-diary/simple-order/middleware"
+
+	_orderHttpDeliver "gitlab.warungpintar.co/enrinal/intern-diary/simple-order/order/delivery/http"
+	_orderRepo "gitlab.warungpintar.co/enrinal/intern-diary/simple-order/order/repository/mysql"
+	_orderUsecase "gitlab.warungpintar.co/enrinal/intern-diary/simple-order/order/usecase"
 )
 
 func init() {
@@ -34,8 +38,9 @@ func main() {
 	dbHost := viper.GetString(`database.host`)
 	dbPort := viper.GetString(`database.port`)
 	dbUser := viper.GetString(`database.user`)
+	dbPass := viper.GetString(`database.pass`)
 	dbName := viper.GetString(`database.dbname`)
-	connection := fmt.Sprintf("%s:@tcp(%s:%s)/%s", dbUser, dbHost, dbPort, dbName)
+	connection := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", dbUser, dbPass, dbHost, dbPort, dbName)
 	val := url.Values{}
 	val.Add("parseTime", "1")
 	val.Add("loc", "Asia/Jakarta")
@@ -63,7 +68,12 @@ func main() {
 
 	customerrepo := _customerRepo.NewMysqlCustomerRepository(dbConn)
 	timeoutContext := time.Duration(viper.GetInt("context.timeout")) * time.Second
-	customerusecase :=  _cusotmerUsecase.NewCustomerUsecase(customerrepo, timeoutContext)
-	_customerHttpDeliver.NewCustomerHandler(e,customerusecase)
+	customerusecase := _cusotmerUsecase.NewCustomerUsecase(customerrepo, timeoutContext)
+	_customerHttpDeliver.NewCustomerHandler(e, customerusecase)
+
+	orderrepo := _orderRepo.NewMysqlOrderRepository(dbConn)
+	orderusecase := _orderUsecase.NewOrderUsecase(orderrepo, customerrepo, timeoutContext)
+	_orderHttpDeliver.NewOrderHandler(e, orderusecase)
+
 	log.Fatal(e.Start(viper.GetString("server.address")))
 }

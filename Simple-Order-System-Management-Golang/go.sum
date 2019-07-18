@@ -194,6 +194,7 @@ gitlab.warungpintar.co/enrinal/intern-diary v0.0.0-20190613100654-5dce129a3cba h
 gitlab.warungpintar.co/enrinal/intern-diary v0.0.0-20190621062715-3dcfb7dc4f4b h1:wsZLbKgoony/pBo08WCYKfrzGS1G6WbgBuKfXfFZYvs=
 gitlab.warungpintar.co/enrinal/intern-diary v0.0.0-20190627064247-60a57c3d8896 h1:pUwMM84K2Sz+VoHLGqOaqBQ4CtyilzTmHPOp9tBohcs=
 gitlab.warungpintar.co/enrinal/intern-diary v0.0.0-20190709080258-572f18b8ad6d h1:ipnMRWm8/TZsrHuVj83OpbNuGyCdYJ+29OtBnelVfjM=
+gitlab.warungpintar.co/enrinal/intern-diary v0.0.0-20190716104448-94c8a48346da h1:K8VdLKS1s2V5HkQRgTpizB4M974KcrosczHjNjZ00Q0=
 go.etcd.io/bbolt v1.3.2/go.mod h1:IbVyRI1SCnLcuJnV2u8VeU0CEYM7e686BmAb1XKL+uU=
 go.etcd.io/bbolt v1.3.3/go.mod h1:IbVyRI1SCnLcuJnV2u8VeU0CEYM7e686BmAb1XKL+uU=
 go.opencensus.io v0.21.0/go.mod h1:mSImk1erAIZhrmZN+AvHh14ztQfjbGwt4TtuofqLduU=

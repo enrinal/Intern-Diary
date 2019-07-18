@@ -14,7 +14,7 @@ import (
 
 func TestGetAllOrder(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
-		Ordermocks := &orders.Repository{}
+		Ordermocks := new(orders.Repository)
 		Ordermocks.On("GetAllOrder", mock.Anything, mock.AnythingOfType("int64")).Return([]*models.Order{
 			&models.Order{ID: 1, Item: "Mobil"},
 			&models.Order{ID: 1, Item: "Mobil"},
@@ -36,7 +36,7 @@ func TestGetAllOrder(t *testing.T) {
 
 func TestGetOrderById(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
-		Ordermocks := &orders.Repository{}
+		Ordermocks := new(orders.Repository)
 		Ordermocks.On("GetOrderById", mock.Anything, int64(2)).Return(&models.Order{ID: 2, Item: "Mobil", Status: 1}, nil)
 		Order := NewOrderUsecase(Ordermocks, nil, time.Second*2)
 		c, err := Order.GetOrderById(context.TODO(), int64(2))
@@ -47,8 +47,8 @@ func TestGetOrderById(t *testing.T) {
 
 func TestOrderProcess(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
-		Ordermocks := &orders.Repository{}
-		Ordermocks.On("GetOrderById", mock.Anything, int64(2)).Return(&models.Order{ID: 2, Item: "Mobil", Status: 1}, nil)
+		Ordermocks := new(orders.Repository)
+		Ordermocks.On("ChangeOrderProcess", mock.Anything, int64(2)).Once().Return(nil)
 		Order := NewOrderUsecase(Ordermocks, nil, time.Second*2)
 		err := Order.ChangeOrderProcess(context.TODO(), int64(2))
 		assert.NoError(t, err)
@@ -57,27 +57,27 @@ func TestOrderProcess(t *testing.T) {
 
 func TestOrderSend(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
-		Ordermocks := &orders.Repository{}
-		Ordermocks.On("GetOrderById", mock.Anything, int64(2)).Return(&models.Order{ID: 2, Item: "Mobil", Status: 2}, nil)
+		Ordermocks := new(orders.Repository)
+		Ordermocks.On("ChangeOrderSend", mock.Anything, int64(2)).Once().Return(nil)
 		Order := NewOrderUsecase(Ordermocks, nil, time.Second*2)
-		err := Order.ChangeOrderProcess(context.TODO(), int64(2))
+		err := Order.ChangeOrderSend(context.TODO(), int64(2))
 		assert.NoError(t, err)
 	})
 }
 
 func TestOrderDelivered(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
-		Ordermocks := &orders.Repository{}
-		Ordermocks.On("GetOrderById", mock.Anything, int64(2)).Return(&models.Order{ID: 2, Item: "Mobil", Status: 3}, nil)
+		Ordermocks :=new(orders.Repository)
+		Ordermocks.On("ChangeOrderDelivered", mock.Anything, int64(2)).Once().Return(nil)
 		Order := NewOrderUsecase(Ordermocks, nil, time.Second*2)
-		err := Order.ChangeOrderProcess(context.TODO(), int64(2))
+		err := Order.ChangeOrderDelivered(context.TODO(), int64(2))
 		assert.NoError(t, err)
 	})
 }
 
 func TestAllOrderByCustomerId(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
-		Ordermocks := &orders.Repository{}
+		Ordermocks :=new(orders.Repository)
 		Ordermocks.On("GetAllOrderById", mock.Anything, int64(1)).Return([]*models.Order{
 			&models.Order{IDCust: 1, Item: "Mobil"},
 			&models.Order{IDCust: 1, Item: "Mobil"},
@@ -99,7 +99,7 @@ func TestAllOrderByCustomerId(t *testing.T) {
 
 func TestCountAllOrderByCustomerId(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
-		Ordermocks := &orders.Repository{}
+		Ordermocks := new(orders.Repository)
 		Ordermocks.On("GetAllOrderById", mock.Anything, int64(1)).Return([]*models.Order{
 			&models.Order{IDCust: 1, Item: "Mobil"},
 			&models.Order{IDCust: 1, Item: "Mobil"},
@@ -121,7 +121,7 @@ func TestCountAllOrderByCustomerId(t *testing.T) {
 
 func TestCheckLimitOrder(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
-		Ordermocks := &orders.Repository{}
+		Ordermocks := new(orders.Repository)
 		Ordermocks.On("GetAllOrderById", mock.Anything, int64(1)).Return([]*models.Order{
 			&models.Order{IDCust: 1, Item: "Mobil"},
 			&models.Order{IDCust: 1, Item: "Mobil"},
@@ -134,7 +134,7 @@ func TestCheckLimitOrder(t *testing.T) {
 			&models.Order{IDCust: 1, Item: "Mobil"},
 			&models.Order{IDCust: 1, Item: "Mobil"},
 		}, nil)
-		customermocks := &customers.Repository{}
+		customermocks := new(customers.Repository)
 		customermocks.On("GetCustomerById", mock.Anything, int64(1)).Return(&models.Customer{ID: 1, Name: "Name", Status: 2}, nil)
 		Order := NewOrderUsecase(Ordermocks, customermocks, time.Second*2)
 		c, err := Order.CheckLimitOrder(context.TODO(), int64(1))
@@ -142,7 +142,7 @@ func TestCheckLimitOrder(t *testing.T) {
 		assert.Equal(t, c, true)
 	})
 	t.Run("success", func(t *testing.T) {
-		Ordermocks := &orders.Repository{}
+		Ordermocks := new(orders.Repository)
 		Ordermocks.On("GetAllOrderById", mock.Anything, int64(1)).Return([]*models.Order{
 			&models.Order{IDCust: 1, Item: "Mobil"},
 			&models.Order{IDCust: 1, Item: "Mobil"},
@@ -155,7 +155,7 @@ func TestCheckLimitOrder(t *testing.T) {
 			&models.Order{IDCust: 1, Item: "Mobil"},
 			&models.Order{IDCust: 1, Item: "Mobil"},
 		}, nil)
-		customermocks := &customers.Repository{}
+		customermocks := new(customers.Repository)
 		customermocks.On("GetCustomerById", mock.Anything, int64(1)).Return(&models.Customer{ID: 1, Name: "Name", Status: 1}, nil)
 		Order := NewOrderUsecase(Ordermocks, customermocks, time.Second*2)
 		c, err := Order.CheckLimitOrder(context.TODO(), int64(1))

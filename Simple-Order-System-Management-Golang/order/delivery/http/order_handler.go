@@ -23,14 +23,14 @@ func NewOrderHandler(e *echo.Echo, order order.Usecase) {
 	handler := &OrderHandler{
 		OrderUsecase: order,
 	}
-	e.GET("/orders", handler.FetchAllOrder)
-	e.GET("/order/customer/:id", handler.FetchAllOrderByID)
-	e.GET("/order/:id", handler.FetchOrderByID)
-	e.GET("/order/limitorder/:id", handler.ChekcLimitOrder)
-	e.GET("/order/countorder/:id", handler.OrderCustCount)
-	e.PUT("/order/process/:id", handler.ChangeOrderProcess)
-	e.PUT("/order/send/:id", handler.ChangeOrderSend)
-	e.PUT("/order/delivered/:id", handler.ChangeOrderDelivered)
+	e.GET("/api/v1/orders", handler.FetchAllOrder)
+	e.GET("/api/v1/orders/customer/:id", handler.FetchAllOrderByID)
+	e.GET("/api/v1/orders/:id", handler.FetchOrderByID)
+	e.GET("/api/v1/orders/:id/limitorder", handler.ChekcLimitOrder)
+	e.GET("/api/v1/orders/:id/countorder", handler.OrderCustCount)
+	e.PUT("/api/v1/orders/:id/process", handler.ChangeOrderProcess)
+	e.PUT("/api/v1/orders/:id/send", handler.ChangeOrderSend)
+	e.PUT("/api/v1/orders/:id/delivered", handler.ChangeOrderDelivered)
 }
 
 func (order *OrderHandler) FetchAllOrder(c echo.Context) error {

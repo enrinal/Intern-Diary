@@ -19,7 +19,7 @@ func TestGetAllOrder(t *testing.T) {
 		AddRow(1, "1", "mobil", 1).
 		AddRow(2, "2", "rumah", 2)
 
-	query := "SELECT id, idcust, item, status FROM order LIMIT \\?"
+	query := "SELECT id, idcust, item, status FROM `order` LIMIT \\?"
 	mock.ExpectQuery(query).WillReturnRows(rows)
 	or := NewMysqlOrderRepository(db)
 	num := int64(2)
@@ -41,7 +41,7 @@ func TestGetOrderById(t *testing.T) {
 		AddRow(1, "1", "mobil", 1)
 
 	orderId := int64(1)
-	query := "SELECT id, idcust, item, status FROM order WHERE id=\\?"
+	query := "SELECT id, idcust, item, status FROM `order` WHERE id=\\?"
 	mock.ExpectQuery(query).WillReturnRows(rows)
 	or := NewMysqlOrderRepository(db)
 	order, err := or.GetOrderById(context.TODO(), orderId)
@@ -65,7 +65,7 @@ func TestGetAllOrderById(t *testing.T) {
 		AddRow(2, "1", "rumah", 2)
 
 	custId := int64(1)
-	query := "SELECT id, idcust, item, status FROM order WHERE idcust=\\?"
+	query := "SELECT id, idcust, item, status FROM `order` WHERE idcust=\\?"
 	mock.ExpectQuery(query).WillReturnRows(rows)
 	or := NewMysqlOrderRepository(db)
 	orders, err := or.GetAllOrderById(context.TODO(), custId)
@@ -81,7 +81,7 @@ func TestChangeOrderSend(t *testing.T) {
 	}
 	defer db.Close()
 	custId := int64(1)
-	query := "UPDATE order SET status=\\? WHERE id=\\?"
+	query := "UPDATE `order` SET status=\\? WHERE id=\\?"
 	prep := mock.ExpectPrepare(query)
 	prep.ExpectExec().WithArgs(Send, custId).WillReturnResult(sqlmock.NewResult(1, 1))
 	or := NewMysqlOrderRepository(db)
@@ -97,7 +97,7 @@ func TestChangeOrderProcess(t *testing.T) {
 	}
 	defer db.Close()
 	custId := int64(1)
-	query := "UPDATE order SET status=\\? WHERE id=\\?"
+	query := "UPDATE `order` SET status=\\? WHERE id=\\?"
 	prep := mock.ExpectPrepare(query)
 	prep.ExpectExec().WithArgs(Process, custId).WillReturnResult(sqlmock.NewResult(1, 1))
 	or := NewMysqlOrderRepository(db)
@@ -113,7 +113,7 @@ func TestChangeOrderDelivered(t *testing.T) {
 	}
 	defer db.Close()
 	custId := int64(1)
-	query := "UPDATE order SET status=\\? WHERE id=\\?"
+	query := "UPDATE `order` SET status=\\? WHERE id=\\?"
 	prep := mock.ExpectPrepare(query)
 	prep.ExpectExec().WithArgs(Delivered, custId).WillReturnResult(sqlmock.NewResult(1, 1))
 	or := NewMysqlOrderRepository(db)
