@@ -6,15 +6,17 @@ instagram = Instagram()
 instagram.with_credentials('mispersepsi','warungpintar123!')
 instagram.login()
 
-medias = instagram.get_medias_by_tag('tumbuhbarengwarung', count=20)
+medias = instagram.get_medias_by_tag('tumbuhbarengwarung', count=5)
 
 for media in medias:
-    print(media)
-    print('Account info:')
+    print("Media Info :\n")
+    print('Create at : ', media.created_time)
+    print('Caption : ', media.caption)
+    print('Link Image : ', media.image_high_resolution_url)
     account = media.owner
-    print('Id', account.identifier)
-    # print('Username', account.username)
-    # print('Full Name', account.full_name)
-    # print('Profile Pic Url', account.get_profile_picture_url_hd())
+    user = instagram.get_account_by_id(account.identifier)
+    print("\nAccount Info : \n")
+    print("Username : ", user.username)
+    print("Profile Pict : ",user.profile_pic_url_hd)
     print('--------------------------------------------------')
 
