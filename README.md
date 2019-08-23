@@ -7,7 +7,7 @@ Setiap Directory Project disusun day-by-day
 # Projetc In This Repository
 * [Simple Order Management System (Check Folder for More Information)](https://gitlab.warungpintar.co/enrinal/intern-diary/tree/master/Simple-Order-System-Management-Golang)
 * [Crud in Mongodb](https://gitlab.warungpintar.co/enrinal/intern-diary/tree/master/crud%20mongodb)
-* ...
+* [Order Microservice With Grpc](https://gitlab.warungpintar.co/enrinal/intern-diary/tree/master/order-microservice-grpc)
 
 
 # Importan Link
